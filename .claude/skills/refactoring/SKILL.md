@@ -28,11 +28,11 @@ description: 리팩터링 전체 절차 스킬. 사용자가 "리팩터링", "�
 ### 절차
 
 ```
-1. ./gradlew ktlintCheck → 현재 위반 사항 확인
-2. ./gradlew ktlintFormat → 자동 수정
-3. 자동 수정 불가 항목 수동 정리
+1. ./gradlew checkstyleMain → 현재 위반 사항 확인
+2. 위반 사항 수정 (import 순서, 네이밍, 공백 등)
+3. ./gradlew checkstyleMain → 위반 0건 확인
 4. ./gradlew test → 동작 유지 확인
-5. 도메인별로 커밋
+5. 커밋
 ```
 
 ### 정리 대상
@@ -79,7 +79,7 @@ style(order): 네이밍 컨벤션 camelCase 통일
 ### 제거 대상
 | 대상 | 확인 방법 |
 |---|---|
-| 미사용 import | IDE 경고 또는 ktlint |
+| 미사용 import | IDE 경고 또는 Checkstyle |
 | 미사용 private 메서드 | IDE "unused" 경고 |
 | 미사용 변수/필드 | 컴파일러 경고 |
 | 주석 처리된 코드 | 수동 확인 + git blame |

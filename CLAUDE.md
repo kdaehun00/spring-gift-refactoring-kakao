@@ -116,10 +116,13 @@ Phase 3: Service Layer 추출
 # 애플리케이션 실행
 ./gradlew bootRun
 
-# 코드 포맷팅 (ktlint)
+# Java 코드 스타일 검사 (Checkstyle, Google Java Style)
+./gradlew checkstyleMain
+
+# Kotlin 코드 포맷팅 (ktlint)
 ./gradlew ktlintFormat
 
-# 코드 스타일 검사
+# Kotlin 코드 스타일 검사
 ./gradlew ktlintCheck
 
 # 클린 빌드
@@ -139,7 +142,7 @@ Phase 3: Service Layer 추출
 | Database | MySQL (prod) / H2 (dev/test) |
 | Auth | JWT (JJWT 0.13.0) + Kakao OAuth |
 | Template | Thymeleaf |
-| Linter | ktlint 14.0.1 |
+| Linter | Checkstyle 10.21.4 (Java, Google Style) + ktlint 14.0.1 (Kotlin) |
 | Test | JUnit 5 |
 
 ---

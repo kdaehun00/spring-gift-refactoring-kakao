@@ -11,8 +11,8 @@
 - [x] test(order): 주문 API 인수테스트 작성
 
 ### Phase 1: 스타일 정리
-- [ ] style(all): ktlintFormat 자동 포맷 적용
-- [ ] style(all): 수동 정리 (네이밍 컨벤션, import 정렬 등)
+- [x] chore: Checkstyle 플러그인 및 Google Java Style 설정 추가
+- [x] style(all): Google Java Style 기반 코드 스타일 정리 (import 순서, @Autowired, Collectors 등)
 
 ### Phase 2: 미사용 코드 제거
 - [ ] refactor(all): 미사용 import 제거
@@ -38,10 +38,10 @@
 - **검증**: `./gradlew test` 전체 통과
 
 ### Phase 1: 스타일 정리
-- **도구**: ktlint, IDE 포맷터
-- **접근**: `./gradlew ktlintFormat` 자동 적용 후 수동 정리
+- **도구**: Checkstyle (Google Java Style 기반)
+- **접근**: `./gradlew checkstyleMain`으로 위반 사항 확인 후 수정
 - **주의**: 포맷팅 중 로직 변경 절대 금지
-- **검증**: `./gradlew test` 통과 확인
+- **검증**: `./gradlew checkstyleMain` 위반 0건 + `./gradlew test` 통과 확인
 
 ### Phase 2: 미사용 코드 제거
 - **접근**: IDE 인스펙션 → git blame 확인 → 제거
@@ -77,6 +77,11 @@
 - **활용 방식**: 프로젝트 전체 구조 탐색 및 분석, CLAUDE.md 행동 규약 초안 생성, 스킬 문서 3종 작성, README.md 체크리스트 구성
 - **AI 산출물 수정 내용**: CLAUDE.md에 "대량 변경 금지", "요청하지 않은 기능 추가 금지" 규칙을 사용자 요청에 따라 추가. readme-management 스킬에 Phase 0(인수테스트) 섹션을 사용자 요청에 따라 보강
 - **학습한 내용**: 프로젝트가 Java 21 + Kotlin 1.9.25 혼용 환경이며, Flyway로 DB 마이그레이션을 관리하고, H2 인메모리 DB를 테스트에 활용할 수 있음을 파악
+
+### 2026-02-26 — Phase 1: 스타일 정리 (Checkstyle 도입)
+- **활용 방식**: 전체 Java 소스 파일의 import 순서, 불필요한 어노테이션, 미사용 import 탐색 및 수정
+- **AI 산출물 수정 내용**: Google Java Style checkstyle.xml을 프로젝트에 맞게 커스터마이징 (인덴트 4spaces, 라인 120자, Javadoc 필수 비활성화). 12개 파일의 import 정렬, 4곳의 @Autowired 제거, OptionController의 Collectors.toList() → .toList() 변경, OrderController의 빈 catch 블록에 주석 추가
+- **학습한 내용**: Google Java Style의 import 규칙은 static/non-static 두 그룹만 사용하며, non-static 내에서는 패키지 구분 없이 전체 알파벳순으로 정렬한다. Spring에서 단일 생성자는 @Autowired 불필요
 
 ### 2026-02-26 — Phase 0: 테스트 코드 작성
 - **활용 방식**: 6개 도메인(category, member, product, option, wish, order)의 Controller 코드를 분석하고 인수테스트 초안을 생성
