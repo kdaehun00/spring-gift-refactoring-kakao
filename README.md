@@ -77,3 +77,8 @@
 - **활용 방식**: 프로젝트 전체 구조 탐색 및 분석, CLAUDE.md 행동 규약 초안 생성, 스킬 문서 3종 작성, README.md 체크리스트 구성
 - **AI 산출물 수정 내용**: CLAUDE.md에 "대량 변경 금지", "요청하지 않은 기능 추가 금지" 규칙을 사용자 요청에 따라 추가. readme-management 스킬에 Phase 0(인수테스트) 섹션을 사용자 요청에 따라 보강
 - **학습한 내용**: 프로젝트가 Java 21 + Kotlin 1.9.25 혼용 환경이며, Flyway로 DB 마이그레이션을 관리하고, H2 인메모리 DB를 테스트에 활용할 수 있음을 파악
+
+### 2026-02-26 — Phase 0: 테스트 코드 작성
+- **활용 방식**: 6개 도메인(category, member, product, option, wish, order)의 Controller 코드를 분석하고 인수테스트 초안을 생성
+- **AI 산출물 수정 내용**: 시드 데이터(V2__Insert_default_data.sql) 기반으로 테스트 데이터 ID를 매핑. 삭제 테스트에서 FK 제약 조건을 고려하여 새 엔티티를 생성 후 삭제하는 방식 적용. Order 도메인은 Kakao 외부 API 의존 없이 시드 데이터 사용자의 포인트 내에서 테스트 가능하도록 구성
+- **학습한 내용**: AuthenticationResolver가 Authorization 헤더에서 JWT를 파싱하여 Member를 반환하는 구조. 인증 실패 시 null 반환 후 Controller에서 401 처리. @Transactional로 테스트 간 데이터 격리 가능

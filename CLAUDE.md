@@ -25,7 +25,9 @@ README.md는 이 프로젝트의 **단일 진실 공급원(Single Source of Trut
 3. 코드 수정
 4. 테스트 통과 확인
 5. README.md 체크리스트 업데이트
-6. 커밋
+6. 코드 커밋
+7. Phase 완료 시 AI 활용 기록을 README.md에 추가
+8. 문서 변경은 별도 docs 커밋으로 분리
 ```
 
 ---
