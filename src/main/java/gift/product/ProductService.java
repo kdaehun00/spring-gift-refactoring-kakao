@@ -1,9 +1,10 @@
 package gift.product;
 
 import gift.category.Category;
+import gift.category.CategoryErrorCode;
+import gift.category.CategoryException;
 import gift.category.CategoryRepository;
 import java.util.List;
-import java.util.NoSuchElementException;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
@@ -32,29 +33,22 @@ public class ProductService {
     @Transactional(readOnly = true)
     public Product findById(Long id) {
         return productRepository.findById(id)
-            .orElseThrow(() -> new NoSuchElementException("상품이 존재하지 않습니다. id=" + id));
-    }
-
-    @Transactional(readOnly = true)
-    public Product findByIdOrNull(Long id) {
-        return productRepository.findById(id).orElse(null);
+            .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NOT_FOUND));
     }
 
     @Transactional
     public Product save(String name, int price, String imageUrl, Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
-            .orElseThrow(
-                () -> new NoSuchElementException("카테고리가 존재하지 않습니다. id=" + categoryId));
+            .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
         return productRepository.save(new Product(name, price, imageUrl, category));
     }
 
     @Transactional
     public Product update(Long id, String name, int price, String imageUrl, Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
-            .orElseThrow(
-                () -> new NoSuchElementException("카테고리가 존재하지 않습니다. id=" + categoryId));
+            .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
         Product product = productRepository.findById(id)
-            .orElseThrow(() -> new NoSuchElementException("상품이 존재하지 않습니다. id=" + id));
+            .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NOT_FOUND));
         product.update(name, price, imageUrl, category);
         return productRepository.save(product);
     }
