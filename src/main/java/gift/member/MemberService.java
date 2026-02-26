@@ -1,7 +1,6 @@
 package gift.member;
 
 import java.util.List;
-import java.util.NoSuchElementException;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -21,13 +20,13 @@ public class MemberService {
     @Transactional(readOnly = true)
     public Member findById(Long id) {
         return memberRepository.findById(id)
-            .orElseThrow(() -> new NoSuchElementException("Member not found. id=" + id));
+            .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
     }
 
     @Transactional
     public Member register(String email, String password) {
         if (memberRepository.existsByEmail(email)) {
-            throw new IllegalArgumentException("Email is already registered.");
+            throw new MemberException(MemberErrorCode.EMAIL_ALREADY_REGISTERED);
         }
         return memberRepository.save(new Member(email, password));
     }
@@ -35,10 +34,10 @@ public class MemberService {
     @Transactional(readOnly = true)
     public Member login(String email, String password) {
         Member member = memberRepository.findByEmail(email)
-            .orElseThrow(() -> new IllegalArgumentException("Invalid email or password."));
+            .orElseThrow(() -> new MemberException(MemberErrorCode.INVALID_CREDENTIALS));
 
         if (member.getPassword() == null || !member.getPassword().equals(password)) {
-            throw new IllegalArgumentException("Invalid email or password.");
+            throw new MemberException(MemberErrorCode.INVALID_CREDENTIALS);
         }
         return member;
     }
@@ -51,7 +50,7 @@ public class MemberService {
     @Transactional
     public void update(Long id, String email, String password) {
         Member member = memberRepository.findById(id)
-            .orElseThrow(() -> new NoSuchElementException("Member not found. id=" + id));
+            .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
         member.update(email, password);
         memberRepository.save(member);
     }
@@ -59,7 +58,7 @@ public class MemberService {
     @Transactional
     public void chargePoint(Long id, int amount) {
         Member member = memberRepository.findById(id)
-            .orElseThrow(() -> new NoSuchElementException("Member not found. id=" + id));
+            .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
         member.chargePoint(amount);
         memberRepository.save(member);
     }
