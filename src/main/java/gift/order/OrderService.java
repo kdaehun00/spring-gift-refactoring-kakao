@@ -36,10 +36,8 @@ public class OrderService {
 
     @Transactional
     public Order createOrder(Member member, Long optionId, int quantity, String message) {
-        Option option = optionRepository.findById(optionId).orElse(null);
-        if (option == null) {
-            return null;
-        }
+        Option option = optionRepository.findById(optionId)
+            .orElseThrow(() -> new OrderException(OrderErrorCode.OPTION_NOT_FOUND));
 
         option.subtractQuantity(quantity);
         optionRepository.save(option);

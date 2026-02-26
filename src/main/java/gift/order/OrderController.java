@@ -1,6 +1,8 @@
 package gift.order;
 
 import gift.auth.AuthenticationResolver;
+import gift.error.CommonErrorCode;
+import gift.error.CommonException;
 import jakarta.validation.Valid;
 import java.net.URI;
 import org.springframework.data.domain.Pageable;
@@ -33,7 +35,7 @@ public class OrderController {
     ) {
         var member = authenticationResolver.extractMember(authorization);
         if (member == null) {
-            return ResponseEntity.status(401).build();
+            throw new CommonException(CommonErrorCode.UNAUTHORIZED);
         }
         var orders = orderService.findByMemberId(member.getId(), pageable)
             .map(OrderResponse::from);
@@ -55,16 +57,12 @@ public class OrderController {
     ) {
         var member = authenticationResolver.extractMember(authorization);
         if (member == null) {
-            return ResponseEntity.status(401).build();
+            throw new CommonException(CommonErrorCode.UNAUTHORIZED);
         }
 
         var saved = orderService.createOrder(
             member, request.optionId(), request.quantity(), request.message()
         );
-        if (saved == null) {
-            return ResponseEntity.notFound().build();
-        }
-
         return ResponseEntity.created(URI.create("/api/orders/" + saved.getId()))
             .body(OrderResponse.from(saved));
     }
