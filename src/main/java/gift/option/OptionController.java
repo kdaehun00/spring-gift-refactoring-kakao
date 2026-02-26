@@ -1,11 +1,12 @@
 package gift.option;
 
+import gift.error.CommonErrorCode;
+import gift.error.CommonException;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -28,11 +29,7 @@ public class OptionController {
 
     @GetMapping
     public ResponseEntity<List<OptionResponse>> getOptions(@PathVariable Long productId) {
-        List<Option> options = optionService.findByProductId(productId);
-        if (options == null) {
-            return ResponseEntity.notFound().build();
-        }
-        List<OptionResponse> responses = options.stream()
+        List<OptionResponse> responses = optionService.findByProductId(productId).stream()
             .map(OptionResponse::from)
             .toList();
         return ResponseEntity.ok(responses);
@@ -46,10 +43,6 @@ public class OptionController {
         validateName(request.name());
 
         Option saved = optionService.createOption(productId, request.name(), request.quantity());
-        if (saved == null) {
-            return ResponseEntity.notFound().build();
-        }
-
         URI location = URI.create("/api/products/" + productId + "/options/" + saved.getId());
         return ResponseEntity.created(location)
             .body(OptionResponse.from(saved));
@@ -60,22 +53,14 @@ public class OptionController {
         @PathVariable Long productId,
         @PathVariable Long optionId
     ) {
-        boolean deleted = optionService.deleteOption(productId, optionId);
-        if (!deleted) {
-            return ResponseEntity.notFound().build();
-        }
+        optionService.deleteOption(productId, optionId);
         return ResponseEntity.noContent().build();
     }
 
     private void validateName(String name) {
         List<String> errors = OptionNameValidator.validate(name);
         if (!errors.isEmpty()) {
-            throw new IllegalArgumentException(String.join(", ", errors));
+            throw new CommonException(CommonErrorCode.INVALID_REQUEST);
         }
-    }
-
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<String> handleIllegalArgument(IllegalArgumentException e) {
-        return ResponseEntity.badRequest().body(e.getMessage());
     }
 }
