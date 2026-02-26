@@ -1,6 +1,8 @@
 package gift.wish;
 
 import gift.auth.AuthenticationResolver;
+import gift.error.CommonErrorCode;
+import gift.error.CommonException;
 import jakarta.validation.Valid;
 import java.net.URI;
 import org.springframework.data.domain.Page;
@@ -36,7 +38,7 @@ public class WishController {
     ) {
         var member = authenticationResolver.extractMember(authorization);
         if (member == null) {
-            return ResponseEntity.status(401).build();
+            throw new CommonException(CommonErrorCode.UNAUTHORIZED);
         }
         var wishes = wishService.findByMemberId(member.getId(), pageable).map(WishResponse::from);
         return ResponseEntity.ok(wishes);
@@ -49,7 +51,7 @@ public class WishController {
     ) {
         var member = authenticationResolver.extractMember(authorization);
         if (member == null) {
-            return ResponseEntity.status(401).build();
+            throw new CommonException(CommonErrorCode.UNAUTHORIZED);
         }
 
         var existing = wishService.findByMemberIdAndProductId(member.getId(), request.productId());
@@ -58,10 +60,6 @@ public class WishController {
         }
 
         var saved = wishService.addWish(member.getId(), request.productId());
-        if (saved == null) {
-            return ResponseEntity.notFound().build();
-        }
-
         return ResponseEntity.created(URI.create("/api/wishes/" + saved.getId()))
             .body(WishResponse.from(saved));
     }
@@ -73,16 +71,12 @@ public class WishController {
     ) {
         var member = authenticationResolver.extractMember(authorization);
         if (member == null) {
-            return ResponseEntity.status(401).build();
+            throw new CommonException(CommonErrorCode.UNAUTHORIZED);
         }
 
         var wish = wishService.findById(id);
-        if (wish == null) {
-            return ResponseEntity.notFound().build();
-        }
-
         if (!wish.getMemberId().equals(member.getId())) {
-            return ResponseEntity.status(403).build();
+            throw new CommonException(CommonErrorCode.FORBIDDEN);
         }
 
         wishService.delete(wish);

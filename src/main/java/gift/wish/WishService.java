@@ -29,16 +29,15 @@ public class WishService {
 
     @Transactional
     public Wish addWish(Long memberId, Long productId) {
-        Product product = productRepository.findById(productId).orElse(null);
-        if (product == null) {
-            return null;
-        }
+        Product product = productRepository.findById(productId)
+            .orElseThrow(() -> new WishException(WishErrorCode.PRODUCT_NOT_FOUND));
         return wishRepository.save(new Wish(memberId, product));
     }
 
     @Transactional(readOnly = true)
     public Wish findById(Long id) {
-        return wishRepository.findById(id).orElse(null);
+        return wishRepository.findById(id)
+            .orElseThrow(() -> new WishException(WishErrorCode.WISH_NOT_FOUND));
     }
 
     @Transactional
