@@ -45,9 +45,6 @@ public class CategoryController {
         Category category = categoryService.update(
             id, request.name(), request.color(), request.imageUrl(), request.description()
         );
-        if (category == null) {
-            return ResponseEntity.notFound().build();
-        }
         return ResponseEntity.ok(CategoryResponse.from(category));
     }
 
