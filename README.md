@@ -3,12 +3,12 @@
 ## 구현할 기능 목록
 
 ### Phase 0: 테스트 코드 작성
-- [ ] test(category): 카테고리 CRUD API 인수테스트 작성
-- [ ] test(member): 회원 가입/로그인 API 인수테스트 작성
-- [ ] test(product): 상품 CRUD API 인수테스트 작성
-- [ ] test(option): 상품 옵션 API 인수테스트 작성
-- [ ] test(wish): 위시리스트 API 인수테스트 작성
-- [ ] test(order): 주문 API 인수테스트 작성
+- [x] test(category): 카테고리 CRUD API 인수테스트 작성
+- [x] test(member): 회원 가입/로그인 API 인수테스트 작성
+- [x] test(product): 상품 CRUD API 인수테스트 작성
+- [x] test(option): 상품 옵션 API 인수테스트 작성
+- [x] test(wish): 위시리스트 API 인수테스트 작성
+- [x] test(order): 주문 API 인수테스트 작성
 
 ### Phase 1: 스타일 정리
 - [ ] style(all): ktlintFormat 자동 포맷 적용
