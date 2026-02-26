@@ -27,6 +27,16 @@
 - [x] refactor(wish): WishService 생성 및 비즈니스 로직 이동
 - [x] refactor(order): OrderService 생성 및 비즈니스 로직 이동
 
+### Phase 4: 에러 처리 구조화
+- [x] feat(error): 공통 에러 인프라 및 CommonErrorCode 생성
+- [x] feat: 도메인별 ErrorCode + Exception 생성 (6개 도메인)
+- [x] refactor(category): Service/Controller의 기존 예외를 도메인 예외로 교체
+- [x] refactor(member): Service/Controller의 기존 예외를 도메인 예외로 교체
+- [x] refactor(product): Service/Controller의 기존 예외를 도메인 예외로 교체
+- [x] refactor(option): Service/Controller의 기존 예외를 도메인 예외로 교체
+- [x] refactor(wish): Service/Controller의 기존 예외를 도메인 예외로 교체
+- [x] refactor(order): Service/Controller의 기존 예외를 도메인 예외로 교체
+
 ## 구현 전략
 
 ### Phase 0: 테스트 코드 작성
@@ -53,6 +63,14 @@
 - **원칙**: Controller는 요청 수신 + 응답 반환만 담당
 - **주의**: 로직 이동 시 기능 추가/변경 금지
 - **검증**: 각 도메인 추출 후 테스트 통과
+
+### Phase 4: 에러 처리 구조화
+- **목적**: 산재된 `@ExceptionHandler`와 `IllegalArgumentException`/`NoSuchElementException`을 도메인별 에러 코드 체계로 통합
+- **구조**: `ErrorCode` 인터페이스 → 도메인별 `{Domain}ErrorCode` enum → `BusinessException` → `GlobalExceptionHandler`
+- **순서**: (1) 공통 인프라 생성 → (2) 도메인별 ErrorCode+Exception 생성 → (3) Service/Controller에서 기존 예외를 도메인 예외로 교체 → (4) Controller별 @ExceptionHandler 제거
+- **원칙**: 에러 응답 형식 통일 (`{"code": "...", "message": "..."}`)
+- **주의**: Admin Controller(`@Controller`)는 `@RestControllerAdvice` 적용 대상이 아니므로 기존 방식 유지. 교체 커밋은 도메인별로 분리하여 테스트 통과 확인
+- **검증**: 각 커밋마다 `./gradlew test` + `./gradlew checkstyleMain` 통과
 
 ## 진행 기록
 
@@ -97,3 +115,8 @@
 - **활용 방식**: 6개 도메인(category, member, product, option, wish, order)의 Controller에서 비즈니스 로직을 Service 클래스로 추출
 - **AI 산출물 수정 내용**: 각 도메인별 Service 클래스 생성(CategoryService, MemberService, ProductService, OptionService, WishService, OrderService). Controller는 요청/응답 변환과 인증/인가만 담당하도록 변경. ProductController에 NoSuchElementException 핸들러 추가(Service에서 throw하는 경우). AdminProductController에서 CategoryRepository 대신 CategoryService 사용. OrderController의 5개 의존성을 OrderService+AuthenticationResolver 2개로 축소
 - **학습한 내용**: Service가 엔티티를 반환하고 Controller에서 DTO 변환하는 패턴이 Admin/API Controller 공유에 효과적. 이름 검증은 Admin(allowKakao=true)과 API(allowKakao=false)의 규칙이 달라 Controller에 유지하는 것이 적절. 중복 위시 처리(200 OK vs 201 Created)처럼 HTTP 응답 코드 분기가 필요한 로직은 Controller에 유지해야 함
+
+### 2026-02-26 — Phase 4: 에러 처리 구조화
+- **활용 방식**: 사용자 제공 스킬 템플릿을 프로젝트에 맞게 커스터마이징하여 setup-error-handling 스킬 생성. 기존 예외 현황을 분석하고 도메인별 에러 코드를 도출하여 구조화된 예외 체계 구축
+- **AI 산출물 수정 내용**: gift.error 패키지에 공통 인프라(ErrorCode, ErrorResponse, BusinessException, GlobalExceptionHandler, CommonErrorCode, CommonException) 6개 클래스 생성. 6개 도메인 패키지에 각각 ErrorCode enum + Exception 클래스 생성(12개 파일). 기존 NoSuchElementException/IllegalArgumentException을 도메인 예외로 교체하고 Controller-level @ExceptionHandler 3개 제거. 인증(401)/인가(403) 처리도 CommonException으로 통합
+- **학습한 내용**: @RestControllerAdvice는 @RestController에만 적용되므로 Admin Controller(@Controller)의 예외 처리는 별도 고려 필요. 이름 검증처럼 여러 에러 메시지를 반환하는 경우 CommonException(INVALID_REQUEST)으로 단순화하면 기존 테스트(상태 코드만 검증)는 통과하지만 에러 메시지 상세도가 낮아지는 트레이드오프 존재

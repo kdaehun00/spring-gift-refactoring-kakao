@@ -228,6 +228,46 @@ refactor(order): OrderService 생성 및 주문 처리 로직 이동
 
 ---
 
+## Phase 4: 에러 처리 구조화
+
+### 목적
+산재된 `@ExceptionHandler`와 `IllegalArgumentException`/`NoSuchElementException`을
+도메인별 에러 코드 체계로 통합한다.
+
+### 구조
+
+```
+gift/error/                         ← 공통 에러 인프라
+├── ErrorCode.java                  ← 인터페이스
+├── ErrorResponse.java              ← 응답 DTO
+├── BusinessException.java          ← 추상 베이스 예외
+├── GlobalExceptionHandler.java     ← @RestControllerAdvice
+├── CommonErrorCode.java            ← 공통 에러 코드 enum
+└── CommonException.java            ← 공통 예외
+
+gift/{domain}/                      ← 각 도메인 패키지 내부
+├── {Domain}ErrorCode.java
+└── {Domain}Exception.java
+```
+
+### 진행 순서
+
+```
+1. 공통 에러 인프라 생성 (ErrorCode, ErrorResponse, BusinessException, GlobalExceptionHandler)
+2. CommonErrorCode + CommonException 생성
+3. 도메인별 ErrorCode + Exception 생성 (기존 예외 메시지에서 도출)
+4. Service/Controller에서 기존 예외를 도메인 예외로 교체 (도메인별 1커밋)
+5. Controller별 @ExceptionHandler 제거 (GlobalExceptionHandler로 통합)
+6. ./gradlew test 통과 확인
+```
+
+### 주의사항
+- `@RestControllerAdvice`는 `@RestController`에만 적용 — Admin Controller(`@Controller`)는 기존 방식 유지
+- 교체 작업은 도메인별로 분리하여 매 커밋마다 테스트 확인
+- 에러 응답 형식이 변경되므로, 기존 테스트의 응답 검증 부분 업데이트 필요
+
+---
+
 ## 전체 흐름 요약
 
 ```
@@ -238,6 +278,8 @@ Phase 1: 스타일 정리 → 가독성 확보
 Phase 2: 미사용 코드 제거 → 불필요한 코드 정리
          ↓ (./gradlew test 통과)
 Phase 3: Service Layer 추출 → 계층 분리 완료
+         ↓ (./gradlew test 통과)
+Phase 4: 에러 처리 구조화 → 예외 체계 통합
          ↓ (./gradlew test 통과)
        완료
 ```
