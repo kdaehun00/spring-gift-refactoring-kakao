@@ -20,12 +20,12 @@
 - [x] 주석 처리된 레거시 코드: 전체 검토 완료, 해당 없음
 
 ### Phase 3: Controller 내에 있는 Service Layer 추출
-- [ ] refactor(category): CategoryService 생성 및 비즈니스 로직 이동
-- [ ] refactor(member): MemberService 생성 및 비즈니스 로직 이동
-- [ ] refactor(product): ProductService 생성 및 비즈니스 로직 이동
-- [ ] refactor(option): OptionService 생성 및 비즈니스 로직 이동
-- [ ] refactor(wish): WishService 생성 및 비즈니스 로직 이동
-- [ ] refactor(order): OrderService 생성 및 비즈니스 로직 이동
+- [x] refactor(category): CategoryService 생성 및 비즈니스 로직 이동
+- [x] refactor(member): MemberService 생성 및 비즈니스 로직 이동
+- [x] refactor(product): ProductService 생성 및 비즈니스 로직 이동
+- [x] refactor(option): OptionService 생성 및 비즈니스 로직 이동
+- [x] refactor(wish): WishService 생성 및 비즈니스 로직 이동
+- [x] refactor(order): OrderService 생성 및 비즈니스 로직 이동
 
 ## 구현 전략
 
@@ -83,13 +83,17 @@
 - **AI 산출물 수정 내용**: 시드 데이터(V2__Insert_default_data.sql) 기반으로 테스트 데이터 ID를 매핑. 삭제 테스트에서 FK 제약 조건을 고려하여 새 엔티티를 생성 후 삭제하는 방식 적용. Order 도메인은 Kakao 외부 API 의존 없이 시드 데이터 사용자의 포인트 내에서 테스트 가능하도록 구성
 - **학습한 내용**: AuthenticationResolver가 Authorization 헤더에서 JWT를 파싱하여 Member를 반환하는 구조. 인증 실패 시 null 반환 후 Controller에서 401 처리. @Transactional로 테스트 간 데이터 격리 가능
 
-### 2026-02-26 — Phase 2: 미사용 코드 제거
-- **활용 방식**: 전체 41개 Java 소스 파일의 import, 필드, private 메서드, 주석 처리된 코드를 탐색
-- **AI 산출물 수정 내용**: OrderController의 미사용 wishRepository 필드/import/생성자 파라미터 제거. 미구현 기능(cleanup wish)의 주석을 TODO로 변경하여 의도 보존
-- **학습한 내용**: 코드베이스가 비교적 깔끔하여 미사용 코드가 거의 없었음. 유일한 미사용 코드는 OrderController에서 주문 시 위시리스트 정리를 위해 주입되었으나 미구현된 WishRepository 1건
-
 ### 2026-02-26 — Phase 1: 스타일 정리 (Checkstyle 도입)
 - **활용 방식**: 전체 Java 소스 파일의 import 순서, 불필요한 어노테이션, 미사용 import 탐색 및 수정
 - **AI 산출물 수정 내용**: Google Java Style checkstyle.xml을 프로젝트에 맞게 커스터마이징 (인덴트 4spaces, 라인 120자, Javadoc 필수 비활성화). 12개 파일의 import 정렬, 4곳의 @Autowired 제거, OptionController의 Collectors.toList() → .toList() 변경, OrderController의 빈 catch 블록에 주석 추가
 - **학습한 내용**: Google Java Style의 import 규칙은 static/non-static 두 그룹만 사용하며, non-static 내에서는 패키지 구분 없이 전체 알파벳순으로 정렬한다. Spring에서 단일 생성자는 @Autowired 불필요
 
+### 2026-02-26 — Phase 2: 미사용 코드 제거
+- **활용 방식**: 전체 41개 Java 소스 파일의 import, 필드, private 메서드, 주석 처리된 코드를 탐색
+- **AI 산출물 수정 내용**: OrderController의 미사용 wishRepository 필드/import/생성자 파라미터 제거. 미구현 기능(cleanup wish)의 주석을 TODO로 변경하여 의도 보존
+- **학습한 내용**: 코드베이스가 비교적 깔끔하여 미사용 코드가 거의 없었음. 유일한 미사용 코드는 OrderController에서 주문 시 위시리스트 정리를 위해 주입되었으나 미구현된 WishRepository 1건
+
+### 2026-02-26 — Phase 3: Service Layer 추출
+- **활용 방식**: 6개 도메인(category, member, product, option, wish, order)의 Controller에서 비즈니스 로직을 Service 클래스로 추출
+- **AI 산출물 수정 내용**: 각 도메인별 Service 클래스 생성(CategoryService, MemberService, ProductService, OptionService, WishService, OrderService). Controller는 요청/응답 변환과 인증/인가만 담당하도록 변경. ProductController에 NoSuchElementException 핸들러 추가(Service에서 throw하는 경우). AdminProductController에서 CategoryRepository 대신 CategoryService 사용. OrderController의 5개 의존성을 OrderService+AuthenticationResolver 2개로 축소
+- **학습한 내용**: Service가 엔티티를 반환하고 Controller에서 DTO 변환하는 패턴이 Admin/API Controller 공유에 효과적. 이름 검증은 Admin(allowKakao=true)과 API(allowKakao=false)의 규칙이 달라 Controller에 유지하는 것이 적절. 중복 위시 처리(200 OK vs 201 Created)처럼 HTTP 응답 코드 분기가 필요한 로직은 Controller에 유지해야 함
