@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 public enum OptionErrorCode implements ErrorCode {
     OPTION_NOT_FOUND("OPTION_NOT_FOUND", "옵션을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     DUPLICATE_OPTION_NAME(
-        "DUPLICATE_OPTION_NAME", "이미 존재하는 옵션명입니다.", HttpStatus.BAD_REQUEST),
+        "DUPLICATE_OPTION_NAME", "이미 존재하는 옵션명입니다.", HttpStatus.CONFLICT),
     CANNOT_DELETE_LAST_OPTION(
         "CANNOT_DELETE_LAST_OPTION",
         "옵션이 1개인 상품은 옵션을 삭제할 수 없습니다.",
