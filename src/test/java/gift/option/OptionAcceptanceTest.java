@@ -40,7 +40,8 @@ class OptionAcceptanceTest {
     @DisplayName("존재하지 않는 상품의 옵션을 조회하면 404를 반환한다")
     void getOptions_ProductNotFound() throws Exception {
         mockMvc.perform(get("/api/products/{productId}/options", 999L))
-            .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.code").value("PRODUCT_NOT_FOUND"));
     }
 
     @Test
@@ -69,7 +70,8 @@ class OptionAcceptanceTest {
     void deleteOption_LastOption() throws Exception {
         // productId=3에는 옵션 1개만 존재 (optionId=5)
         mockMvc.perform(delete("/api/products/{productId}/options/{optionId}", 3L, 5L))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("CANNOT_DELETE_LAST_OPTION"));
     }
 
     @Test
@@ -81,7 +83,8 @@ class OptionAcceptanceTest {
         mockMvc.perform(post("/api/products/{productId}/options", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isConflict());
+            .andExpect(status().isConflict())
+            .andExpect(jsonPath("$.code").value("DUPLICATE_OPTION_NAME"));
     }
 
     @Test
@@ -92,7 +95,8 @@ class OptionAcceptanceTest {
         mockMvc.perform(post("/api/products/{productId}/options", 999L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.code").value("PRODUCT_NOT_FOUND"));
     }
 
     @Test
@@ -100,6 +104,7 @@ class OptionAcceptanceTest {
     void deleteOption_OptionNotFound() throws Exception {
         // productId=1에 존재하지 않는 optionId=999
         mockMvc.perform(delete("/api/products/{productId}/options/{optionId}", 1L, 999L))
-            .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.code").value("OPTION_NOT_FOUND"));
     }
 }
