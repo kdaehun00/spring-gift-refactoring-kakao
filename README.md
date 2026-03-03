@@ -37,6 +37,24 @@
 - [x] refactor(wish): Service/Controller의 기존 예외를 도메인 예외로 교체
 - [x] refactor(order): Service/Controller의 기존 예외를 도메인 예외로 교체
 
+### Phase 5: 인수테스트 강화
+- [x] fix(member): EMAIL_ALREADY_REGISTERED 상태 코드 400 → 409 교정
+- [x] fix(option): DUPLICATE_OPTION_NAME 상태 코드 400 → 409 교정
+- [x] fix(option): Option.subtractQuantity의 IllegalArgumentException을 도메인 예외로 교체
+- [x] fix(member): Member.deductPoint/chargePoint의 IllegalArgumentException을 도메인 예외로 교체
+- [x] test(product): 에러 케이스 인수테스트 추가
+- [x] test(category): 에러 케이스 인수테스트 추가
+- [x] test(member): 에러 케이스 인수테스트 추가
+- [x] test(option): 에러 케이스 인수테스트 추가
+- [x] test(wish): 에러 케이스 인수테스트 추가
+- [x] test(order): 에러 케이스 인수테스트 추가
+- [x] test(member): 에러 응답 code 필드 검증 추가
+- [x] test(product): 에러 응답 code 필드 검증 추가
+- [x] test(category): 에러 응답 code 필드 검증 추가
+- [x] test(option): 에러 응답 code 필드 검증 추가
+- [x] test(wish): 에러 응답 code 필드 검증 추가
+- [x] test(order): 에러 응답 code 필드 검증 추가
+
 ## 구현 전략
 
 ### Phase 0: 테스트 코드 작성
