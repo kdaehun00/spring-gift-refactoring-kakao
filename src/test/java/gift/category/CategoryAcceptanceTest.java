@@ -70,7 +70,8 @@ class CategoryAcceptanceTest {
         mockMvc.perform(put("/api/categories/{id}", 999L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.code").value("CATEGORY_NOT_FOUND"));
     }
 
     @Test
@@ -98,6 +99,7 @@ class CategoryAcceptanceTest {
         mockMvc.perform(post("/api/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("INVALID_REQUEST"));
     }
 }
