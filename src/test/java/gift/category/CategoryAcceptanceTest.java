@@ -89,4 +89,15 @@ class CategoryAcceptanceTest {
         mockMvc.perform(delete("/api/categories/{id}", createdId))
             .andExpect(status().isNoContent());
     }
+
+    @Test
+    @DisplayName("이름이 비어있으면 카테고리 생성 시 400을 반환한다")
+    void createCategory_InvalidRequest() throws Exception {
+        var request = new CategoryRequest("", "#000000", "https://example.com/images/none.jpg", "설명");
+
+        mockMvc.perform(post("/api/categories")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest());
+    }
 }
