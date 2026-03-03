@@ -81,4 +81,15 @@ class MemberAcceptanceTest {
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest());
     }
+
+    @Test
+    @DisplayName("이메일이 비어있으면 회원가입 시 400을 반환한다")
+    void register_InvalidRequest() throws Exception {
+        var request = new MemberRequest("", "password123");
+
+        mockMvc.perform(post("/api/members/register")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isBadRequest());
+    }
 }
