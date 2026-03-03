@@ -55,7 +55,8 @@ class OrderAcceptanceTest {
                 .header("Authorization", "Bearer invalid-token")
                 .param("page", "0")
                 .param("size", "10"))
-            .andExpect(status().isUnauthorized());
+            .andExpect(status().isUnauthorized())
+            .andExpect(jsonPath("$.code").value("UNAUTHORIZED"));
     }
 
     @Test
@@ -85,7 +86,8 @@ class OrderAcceptanceTest {
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.code").value("ORDER_OPTION_NOT_FOUND"));
     }
 
     @Test
@@ -99,6 +101,7 @@ class OrderAcceptanceTest {
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isBadRequest())
+            .andExpect(jsonPath("$.code").value("INSUFFICIENT_STOCK"));
     }
 }
