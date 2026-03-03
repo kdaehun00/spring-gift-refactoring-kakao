@@ -99,4 +99,27 @@ class WishAcceptanceTest {
                 .header("Authorization", "Bearer " + token))
             .andExpect(status().isNoContent());
     }
+
+    @Test
+    @DisplayName("존재하지 않는 상품을 위시리스트에 추가하면 404를 반환한다")
+    void addWish_ProductNotFound() throws Exception {
+        String token = obtainAccessToken();
+        var request = new WishRequest(999L);
+
+        mockMvc.perform(post("/api/wishes")
+                .header("Authorization", "Bearer " + token)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 위시를 삭제하면 404를 반환한다")
+    void removeWish_NotFound() throws Exception {
+        String token = obtainAccessToken();
+
+        mockMvc.perform(delete("/api/wishes/{id}", 999L)
+                .header("Authorization", "Bearer " + token))
+            .andExpect(status().isNotFound());
+    }
 }
