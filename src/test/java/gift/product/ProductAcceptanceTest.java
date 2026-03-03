@@ -95,4 +95,26 @@ class ProductAcceptanceTest {
         mockMvc.perform(delete("/api/products/{id}", createdId))
             .andExpect(status().isNoContent());
     }
+
+    @Test
+    @DisplayName("존재하지 않는 상품을 수정하면 404를 반환한다")
+    void updateProduct_NotFound() throws Exception {
+        var request = new ProductRequest("없는상품", 5000, "https://example.com/images/none.jpg", 1L);
+
+        mockMvc.perform(put("/api/products/{id}", 999L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 카테고리로 상품을 생성하면 404를 반환한다")
+    void createProduct_CategoryNotFound() throws Exception {
+        var request = new ProductRequest("테스트상품", 10000, "https://example.com/images/test.jpg", 999L);
+
+        mockMvc.perform(post("/api/products")
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isNotFound());
+    }
 }
