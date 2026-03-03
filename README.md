@@ -18,6 +18,7 @@
 - [x] refactor(order): 미사용 WishRepository 필드 및 import 제거
 - [x] 미사용 private 메서드: 전체 검토 완료, 미사용 없음
 - [x] 주석 처리된 레거시 코드: 전체 검토 완료, 해당 없음
+- [x] refactor(product): ProductRequest의 미사용 toEntity 메서드 및 import 제거
 
 ### Phase 3: Controller 내에 있는 Service Layer 추출
 - [x] refactor(category): CategoryService 생성 및 비즈니스 로직 이동
