@@ -51,7 +51,8 @@ class ProductAcceptanceTest {
     @DisplayName("존재하지 않는 상품을 조회하면 404를 반환한다")
     void getProduct_NotFound() throws Exception {
         mockMvc.perform(get("/api/products/{id}", 999L))
-            .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.code").value("PRODUCT_NOT_FOUND"));
     }
 
     @Test
@@ -104,7 +105,8 @@ class ProductAcceptanceTest {
         mockMvc.perform(put("/api/products/{id}", 999L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.code").value("PRODUCT_NOT_FOUND"));
     }
 
     @Test
@@ -115,6 +117,7 @@ class ProductAcceptanceTest {
         mockMvc.perform(post("/api/products")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.code").value("CATEGORY_NOT_FOUND"));
     }
 }
