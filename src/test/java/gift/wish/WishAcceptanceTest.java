@@ -57,7 +57,8 @@ class WishAcceptanceTest {
                 .header("Authorization", "Bearer invalid-token")
                 .param("page", "0")
                 .param("size", "10"))
-            .andExpect(status().isUnauthorized());
+            .andExpect(status().isUnauthorized())
+            .andExpect(jsonPath("$.code").value("UNAUTHORIZED"));
     }
 
     @Test
@@ -110,7 +111,8 @@ class WishAcceptanceTest {
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.code").value("WISH_PRODUCT_NOT_FOUND"));
     }
 
     @Test
@@ -120,6 +122,7 @@ class WishAcceptanceTest {
 
         mockMvc.perform(delete("/api/wishes/{id}", 999L)
                 .header("Authorization", "Bearer " + token))
-            .andExpect(status().isNotFound());
+            .andExpect(status().isNotFound())
+            .andExpect(jsonPath("$.code").value("WISH_NOT_FOUND"));
     }
 }
