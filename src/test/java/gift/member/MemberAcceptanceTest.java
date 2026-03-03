@@ -38,14 +38,14 @@ class MemberAcceptanceTest {
     }
 
     @Test
-    @DisplayName("이미 등록된 이메일로 가입하면 400을 반환한다")
+    @DisplayName("이미 등록된 이메일로 가입하면 409를 반환한다")
     void register_DuplicateEmail() throws Exception {
         var request = new MemberRequest("admin@example.com", "password123");
 
         mockMvc.perform(post("/api/members/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isBadRequest());
+            .andExpect(status().isConflict());
     }
 
     @Test

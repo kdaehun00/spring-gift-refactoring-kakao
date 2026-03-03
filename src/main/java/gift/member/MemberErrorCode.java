@@ -6,7 +6,7 @@ import org.springframework.http.HttpStatus;
 public enum MemberErrorCode implements ErrorCode {
     MEMBER_NOT_FOUND("MEMBER_NOT_FOUND", "회원을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     EMAIL_ALREADY_REGISTERED(
-        "EMAIL_ALREADY_REGISTERED", "이미 등록된 이메일입니다.", HttpStatus.BAD_REQUEST),
+        "EMAIL_ALREADY_REGISTERED", "이미 등록된 이메일입니다.", HttpStatus.CONFLICT),
     INVALID_CREDENTIALS(
         "INVALID_CREDENTIALS", "이메일 또는 비밀번호가 올바르지 않습니다.", HttpStatus.BAD_REQUEST),
     INSUFFICIENT_POINT("INSUFFICIENT_POINT", "포인트가 부족합니다.", HttpStatus.BAD_REQUEST),
