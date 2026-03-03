@@ -71,4 +71,35 @@ class OptionAcceptanceTest {
         mockMvc.perform(delete("/api/products/{productId}/options/{optionId}", 3L, 5L))
             .andExpect(status().isBadRequest());
     }
+
+    @Test
+    @DisplayName("이미 존재하는 옵션명으로 추가하면 409를 반환한다")
+    void createOption_DuplicateName() throws Exception {
+        // productId=1에 이미 "스페이스 블랙 / M1 Pro" 옵션이 존재
+        var request = new OptionRequest("스페이스 블랙 / M1 Pro", 10);
+
+        mockMvc.perform(post("/api/products/{productId}/options", 1L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isConflict());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 상품에 옵션을 추가하면 404를 반환한다")
+    void createOption_ProductNotFound() throws Exception {
+        var request = new OptionRequest("새 옵션", 100);
+
+        mockMvc.perform(post("/api/products/{productId}/options", 999L)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(objectMapper.writeValueAsString(request)))
+            .andExpect(status().isNotFound());
+    }
+
+    @Test
+    @DisplayName("존재하지 않는 옵션을 삭제하면 404를 반환한다")
+    void deleteOption_OptionNotFound() throws Exception {
+        // productId=1에 존재하지 않는 optionId=999
+        mockMvc.perform(delete("/api/products/{productId}/options/{optionId}", 1L, 999L))
+            .andExpect(status().isNotFound());
+    }
 }
