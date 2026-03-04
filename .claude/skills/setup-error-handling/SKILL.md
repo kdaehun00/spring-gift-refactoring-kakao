@@ -41,16 +41,6 @@ gift/{domain}/                      ← 각 도메인 패키지 내부
 - 에러 인프라 패키지: `gift.error`
 - $ARGUMENTS에서 도메인 이름들을 추출한다
 
-### 현재 프로젝트의 에러 처리 현황
-
-| 위치 | 예외 | HTTP 응답 |
-|---|---|---|
-| Service | `NoSuchElementException` | Controller별 다름 (404 또는 미처리) |
-| Service | `IllegalArgumentException` | Controller별 `@ExceptionHandler` → 400 |
-| Controller | `null` 체크 후 직접 404 반환 | `ResponseEntity.notFound()` |
-| Controller | 인증 실패 시 직접 401 반환 | `ResponseEntity.status(401)` |
-| AdminController | `NoSuchElementException` throw | Spring 기본 에러 페이지 |
-
 ---
 
 ## 2단계: 공통 에러 인프라 작성

@@ -29,20 +29,14 @@ description: 리팩터링 전체 절차 스킬. 사용자가 "리팩터링", "�
 
 ```
 1. ./gradlew checkstyleMain → 현재 위반 사항 확인
-2. 위반 사항 수정 (import 순서, 네이밍, 공백 등)
+2. 위반 사항 수정
 3. ./gradlew checkstyleMain → 위반 0건 확인
 4. ./gradlew test → 동작 유지 확인
 5. 커밋
 ```
 
-### 정리 대상
-| 항목 | 기준 |
-|---|---|
-| 들여쓰기 | 4 spaces (프로젝트 표준) |
-| import 정렬 | 알파벳 순, 와일드카드 import 금지 |
-| 공백 | 연산자 앞뒤, 중괄호 앞 공백 |
-| 네이밍 | 클래스: PascalCase, 메서드/변수: camelCase, 상수: UPPER_SNAKE |
-| 줄바꿈 | 메서드 사이 1줄 공백, 파일 끝 개행 |
+구체적인 스타일 규칙은 `config/checkstyle/checkstyle.xml`에 정의되어 있으므로
+스킬에서 별도로 나열하지 않는다. `./gradlew checkstyleMain`이 유일한 기준이다.
 
 ### 커밋 예시
 ```
@@ -77,13 +71,16 @@ style(order): 네이밍 컨벤션 camelCase 통일
 ```
 
 ### 제거 대상
+
+미사용 import, 변수, 필드, private 메서드는 Checkstyle/컴파일러가 잡아주므로
+`./gradlew checkstyleMain`과 컴파일 경고를 활용한다.
+
+**도구로 잡히지 않아 수동 확인이 필요한 항목:**
 | 대상 | 확인 방법 |
 |---|---|
-| 미사용 import | IDE 경고 또는 Checkstyle |
-| 미사용 private 메서드 | IDE "unused" 경고 |
-| 미사용 변수/필드 | 컴파일러 경고 |
 | 주석 처리된 코드 | 수동 확인 + git blame |
 | 빈 메서드/클래스 | 수동 확인 |
+| 미사용 public 메서드 | Grep으로 호출처 확인 |
 
 ### 제거 판단 기준
 
@@ -230,41 +227,7 @@ refactor(order): OrderService 생성 및 주문 처리 로직 이동
 
 ## Phase 4: 에러 처리 구조화
 
-### 목적
-산재된 `@ExceptionHandler`와 `IllegalArgumentException`/`NoSuchElementException`을
-도메인별 에러 코드 체계로 통합한다.
-
-### 구조
-
-```
-gift/error/                         ← 공통 에러 인프라
-├── ErrorCode.java                  ← 인터페이스
-├── ErrorResponse.java              ← 응답 DTO
-├── BusinessException.java          ← 추상 베이스 예외
-├── GlobalExceptionHandler.java     ← @RestControllerAdvice
-├── CommonErrorCode.java            ← 공통 에러 코드 enum
-└── CommonException.java            ← 공통 예외
-
-gift/{domain}/                      ← 각 도메인 패키지 내부
-├── {Domain}ErrorCode.java
-└── {Domain}Exception.java
-```
-
-### 진행 순서
-
-```
-1. 공통 에러 인프라 생성 (ErrorCode, ErrorResponse, BusinessException, GlobalExceptionHandler)
-2. CommonErrorCode + CommonException 생성
-3. 도메인별 ErrorCode + Exception 생성 (기존 예외 메시지에서 도출)
-4. Service/Controller에서 기존 예외를 도메인 예외로 교체 (도메인별 1커밋)
-5. Controller별 @ExceptionHandler 제거 (GlobalExceptionHandler로 통합)
-6. ./gradlew test 통과 확인
-```
-
-### 주의사항
-- `@RestControllerAdvice`는 `@RestController`에만 적용 — Admin Controller(`@Controller`)는 기존 방식 유지
-- 교체 작업은 도메인별로 분리하여 매 커밋마다 테스트 확인
-- 에러 응답 형식이 변경되므로, 기존 테스트의 응답 검증 부분 업데이트 필요
+`/setup-error-handling` 스킬을 참조한다.
 
 ---
 

@@ -56,6 +56,11 @@
 - [x] test(wish): 에러 응답 code 필드 검증 추가
 - [x] test(order): 에러 응답 code 필드 검증 추가
 
+### 스킬 정비
+- [x] chore: 스킬에서 정적 도구가 잡는 불필요한 내용 제거
+- [ ] chore: 인라인 템플릿을 별도 파일로 분리
+- [ ] chore: refactoring 스킬을 Phase별로 분리
+
 ## 구현 전략
 
 ### Phase 0: 테스트 코드 작성
