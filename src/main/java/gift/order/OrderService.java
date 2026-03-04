@@ -50,12 +50,10 @@ public class OrderService {
 
         option.subtractQuantity(quantity);
 
-        int price = option.getProduct().getPrice() * quantity;
-        member.deductPoint(price);
+        Order order = new Order(option, memberId, quantity, message);
+        member.deductPoint(order.getTotalPrice());
 
-        Order saved = orderRepository.save(
-            new Order(option, memberId, quantity, message)
-        );
+        Order saved = orderRepository.save(order);
 
         wishRepository.findByMemberIdAndProductId(memberId, option.getProduct().getId())
             .ifPresent(wishRepository::delete);
