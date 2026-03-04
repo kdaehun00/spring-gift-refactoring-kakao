@@ -75,6 +75,7 @@ class OrderAcceptanceTest {
             .andExpect(status().isCreated())
             .andExpect(jsonPath("$.optionId").value(3))
             .andExpect(jsonPath("$.quantity").value(1))
+            .andExpect(jsonPath("$.totalPrice").value(1350000))
             .andExpect(jsonPath("$.message").value("선물입니다"));
     }
 
