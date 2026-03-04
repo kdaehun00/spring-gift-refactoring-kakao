@@ -1,5 +1,7 @@
 package gift.order;
 
+import gift.error.CommonErrorCode;
+import gift.error.CommonException;
 import gift.member.Member;
 import gift.member.MemberRepository;
 import gift.option.Option;
@@ -35,19 +37,20 @@ public class OrderService {
     }
 
     @Transactional
-    public Order createOrder(Member member, Long optionId, int quantity, String message) {
+    public Order createOrder(Long memberId, Long optionId, int quantity, String message) {
+        Member member = memberRepository.findById(memberId)
+            .orElseThrow(() -> new CommonException(CommonErrorCode.UNAUTHORIZED));
+
         Option option = optionRepository.findById(optionId)
             .orElseThrow(() -> new OrderException(OrderErrorCode.OPTION_NOT_FOUND));
 
         option.subtractQuantity(quantity);
-        optionRepository.save(option);
 
         int price = option.getProduct().getPrice() * quantity;
         member.deductPoint(price);
-        memberRepository.save(member);
 
         Order saved = orderRepository.save(
-            new Order(option, member.getId(), quantity, message)
+            new Order(option, memberId, quantity, message)
         );
 
         sendKakaoMessageIfPossible(member, saved, option);

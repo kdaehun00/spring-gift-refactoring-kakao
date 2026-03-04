@@ -61,7 +61,7 @@ public class OrderController {
         }
 
         var saved = orderService.createOrder(
-            member, request.optionId(), request.quantity(), request.message()
+            member.getId(), request.optionId(), request.quantity(), request.message()
         );
         return ResponseEntity.created(URI.create("/api/orders/" + saved.getId()))
             .body(OrderResponse.from(saved));

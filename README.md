@@ -57,7 +57,7 @@
 - [x] test(order): 에러 응답 code 필드 검증 추가
 
 ### Phase 6: 안전한 작동 변경
-- [ ] refactor(order): createOrder 시그니처를 memberId 기반으로 변경
+- [x] refactor(order): createOrder 시그니처를 memberId 기반으로 변경
 - [ ] refactor(wish): 위시 중복 체크를 Service 트랜잭션으로 통합
 - [ ] feat(order): 주문 시 해당 상품의 위시리스트 자동 삭제
 - [ ] refactor(wish): 위시 소유권 확인을 Service로 이동
