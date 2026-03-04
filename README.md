@@ -60,7 +60,7 @@
 - [x] refactor(order): createOrder 시그니처를 memberId 기반으로 변경
 - [x] refactor(wish): 위시 중복 체크를 Service 트랜잭션으로 통합
 - [x] feat(order): 주문 시 해당 상품의 위시리스트 자동 삭제
-- [ ] refactor(wish): 위시 소유권 확인을 Service로 이동
+- [x] refactor(wish): 위시 소유권 확인을 Service로 이동
 - [ ] refactor(order): Order에 totalPrice 필드 추가 및 가격 계산 이동
 - [ ] feat(order): 주문 응답에 totalPrice 포함
 - [ ] feat(auth): @LoginMember ArgumentResolver 도입

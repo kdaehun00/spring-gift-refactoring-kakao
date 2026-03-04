@@ -72,12 +72,7 @@ public class WishController {
             throw new CommonException(CommonErrorCode.UNAUTHORIZED);
         }
 
-        var wish = wishService.findById(id);
-        if (!wish.getMemberId().equals(member.getId())) {
-            throw new CommonException(CommonErrorCode.FORBIDDEN);
-        }
-
-        wishService.delete(wish);
+        wishService.deleteByIdAndMemberId(id, member.getId());
         return ResponseEntity.noContent().build();
     }
 }

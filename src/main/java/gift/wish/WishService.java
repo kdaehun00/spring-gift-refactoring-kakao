@@ -1,5 +1,7 @@
 package gift.wish;
 
+import gift.error.CommonErrorCode;
+import gift.error.CommonException;
 import gift.product.Product;
 import gift.product.ProductRepository;
 import org.springframework.data.domain.Page;
@@ -34,14 +36,13 @@ public class WishService {
         return new WishAddResult(saved, true);
     }
 
-    @Transactional(readOnly = true)
-    public Wish findById(Long id) {
-        return wishRepository.findById(id)
-            .orElseThrow(() -> new WishException(WishErrorCode.WISH_NOT_FOUND));
-    }
-
     @Transactional
-    public void delete(Wish wish) {
+    public void deleteByIdAndMemberId(Long wishId, Long memberId) {
+        Wish wish = wishRepository.findById(wishId)
+            .orElseThrow(() -> new WishException(WishErrorCode.WISH_NOT_FOUND));
+        if (!wish.getMemberId().equals(memberId)) {
+            throw new CommonException(CommonErrorCode.FORBIDDEN);
+        }
         wishRepository.delete(wish);
     }
 }
