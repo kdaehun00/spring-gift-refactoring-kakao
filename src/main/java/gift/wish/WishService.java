@@ -22,16 +22,16 @@ public class WishService {
         return wishRepository.findByMemberId(memberId, pageable);
     }
 
-    @Transactional(readOnly = true)
-    public Wish findByMemberIdAndProductId(Long memberId, Long productId) {
-        return wishRepository.findByMemberIdAndProductId(memberId, productId).orElse(null);
-    }
-
     @Transactional
-    public Wish addWish(Long memberId, Long productId) {
+    public WishAddResult addWish(Long memberId, Long productId) {
+        var existing = wishRepository.findByMemberIdAndProductId(memberId, productId);
+        if (existing.isPresent()) {
+            return new WishAddResult(existing.get(), false);
+        }
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new WishException(WishErrorCode.PRODUCT_NOT_FOUND));
-        return wishRepository.save(new Wish(memberId, product));
+        Wish saved = wishRepository.save(new Wish(memberId, product));
+        return new WishAddResult(saved, true);
     }
 
     @Transactional(readOnly = true)

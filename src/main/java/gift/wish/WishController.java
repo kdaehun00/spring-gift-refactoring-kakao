@@ -54,14 +54,12 @@ public class WishController {
             throw new CommonException(CommonErrorCode.UNAUTHORIZED);
         }
 
-        var existing = wishService.findByMemberIdAndProductId(member.getId(), request.productId());
-        if (existing != null) {
-            return ResponseEntity.ok(WishResponse.from(existing));
+        var result = wishService.addWish(member.getId(), request.productId());
+        if (!result.created()) {
+            return ResponseEntity.ok(WishResponse.from(result.wish()));
         }
-
-        var saved = wishService.addWish(member.getId(), request.productId());
-        return ResponseEntity.created(URI.create("/api/wishes/" + saved.getId()))
-            .body(WishResponse.from(saved));
+        return ResponseEntity.created(URI.create("/api/wishes/" + result.wish().getId()))
+            .body(WishResponse.from(result.wish()));
     }
 
     @DeleteMapping("/{id}")
