@@ -56,6 +56,17 @@
 - [x] test(wish): 에러 응답 code 필드 검증 추가
 - [x] test(order): 에러 응답 code 필드 검증 추가
 
+### Phase 6: 안전한 작동 변경
+- [ ] refactor(order): createOrder 시그니처를 memberId 기반으로 변경
+- [ ] refactor(wish): 위시 중복 체크를 Service 트랜잭션으로 통합
+- [ ] feat(order): 주문 시 해당 상품의 위시리스트 자동 삭제
+- [ ] refactor(wish): 위시 소유권 확인을 Service로 이동
+- [ ] refactor(order): Order에 totalPrice 필드 추가 및 가격 계산 이동
+- [ ] feat(order): 주문 응답에 totalPrice 포함
+- [ ] feat(auth): @LoginMember ArgumentResolver 도입
+- [ ] refactor(order): @LoginMember 적용으로 인증 보일러플레이트 제거
+- [ ] refactor(wish): @LoginMember 적용으로 인증 보일러플레이트 제거
+
 ### 스킬 정비
 - [x] chore: 스킬에서 정적 도구가 잡는 불필요한 내용 제거
 - [x] chore: 인라인 템플릿을 별도 파일로 분리
