@@ -66,6 +66,7 @@
 - [x] feat(auth): @LoginMember ArgumentResolver 도입
 - [x] refactor(order): @LoginMember 적용으로 인증 보일러플레이트 제거
 - [x] refactor(wish): @LoginMember 적용으로 인증 보일러플레이트 제거
+- [x] refactor(order): KakaoMessageClient를 인터페이스로 추출
 
 ### 스킬 정비
 - [x] chore: 스킬에서 정적 도구가 잡는 불필요한 내용 제거

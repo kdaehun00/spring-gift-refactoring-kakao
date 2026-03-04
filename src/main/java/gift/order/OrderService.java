@@ -19,20 +19,20 @@ public class OrderService {
     private final OptionRepository optionRepository;
     private final MemberRepository memberRepository;
     private final WishRepository wishRepository;
-    private final KakaoMessageClient kakaoMessageClient;
+    private final MessageClient messageClient;
 
     public OrderService(
         OrderRepository orderRepository,
         OptionRepository optionRepository,
         MemberRepository memberRepository,
         WishRepository wishRepository,
-        KakaoMessageClient kakaoMessageClient
+        MessageClient messageClient
     ) {
         this.orderRepository = orderRepository;
         this.optionRepository = optionRepository;
         this.memberRepository = memberRepository;
         this.wishRepository = wishRepository;
-        this.kakaoMessageClient = kakaoMessageClient;
+        this.messageClient = messageClient;
     }
 
     @Transactional(readOnly = true)
@@ -58,19 +58,19 @@ public class OrderService {
         wishRepository.findByMemberIdAndProductId(memberId, option.getProduct().getId())
             .ifPresent(wishRepository::delete);
 
-        sendKakaoMessageIfPossible(member, saved, option);
+        sendMessageIfPossible(member, saved, option);
         return saved;
     }
 
-    private void sendKakaoMessageIfPossible(Member member, Order order, Option option) {
+    private void sendMessageIfPossible(Member member, Order order, Option option) {
         if (member.getKakaoAccessToken() == null) {
             return;
         }
         try {
             Product product = option.getProduct();
-            kakaoMessageClient.sendToMe(member.getKakaoAccessToken(), order, product);
+            messageClient.sendToMe(member.getKakaoAccessToken(), order, product);
         } catch (Exception ignored) {
-            // best-effort: 카카오 메시지 전송 실패는 무시
+            // best-effort: 메시지 전송 실패는 무시
         }
     }
 }
