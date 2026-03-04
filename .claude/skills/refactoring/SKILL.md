@@ -137,65 +137,10 @@ Controller는 **요청 수신 + 응답 반환**만 담당하도록 얇게(Thin) 
 7. 커밋
 ```
 
-### Service 클래스 구조 템플릿
+### 템플릿
 
-```java
-@Service
-public class CategoryService {
-
-    private final CategoryRepository categoryRepository;
-
-    public CategoryService(CategoryRepository categoryRepository) {
-        this.categoryRepository = categoryRepository;
-    }
-
-    public List<CategoryResponse> findAll() {
-        return categoryRepository.findAll().stream()
-            .map(CategoryResponse::from)
-            .toList();
-    }
-
-    public void create(CategoryRequest request) {
-        categoryRepository.save(request.toEntity());
-    }
-
-    public void update(Long id, CategoryRequest request) {
-        Category category = categoryRepository.findById(id)
-            .orElseThrow(() -> new NoSuchElementException("카테고리를 찾을 수 없습니다."));
-        category.update(request.name(), request.color(), request.imageUrl(), request.description());
-    }
-
-    public void delete(Long id) {
-        categoryRepository.deleteById(id);
-    }
-}
-```
-
-### 추출 후 Controller 모습
-
-```java
-@RestController
-@RequestMapping("/api/categories")
-public class CategoryController {
-
-    private final CategoryService categoryService;
-
-    public CategoryController(CategoryService categoryService) {
-        this.categoryService = categoryService;
-    }
-
-    @GetMapping
-    public ResponseEntity<List<CategoryResponse>> findAll() {
-        return ResponseEntity.ok(categoryService.findAll());
-    }
-
-    @PostMapping
-    public ResponseEntity<Void> create(@Valid @RequestBody CategoryRequest request) {
-        categoryService.create(request);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-}
-```
+- Service 구조: `service-template.java` 참조
+- Controller 구조: `controller-template.java` 참조
 
 ### Controller에 남겨야 할 것
 - `@RequestMapping`, `@GetMapping` 등 라우팅 어노테이션

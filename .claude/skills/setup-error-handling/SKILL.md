@@ -234,49 +234,12 @@ $ARGUMENTS의 각 도메인에 대해 **해당 도메인 패키지** 안에 생�
 | `IllegalArgumentException("차감할 수량이...")` | Option entity | `INSUFFICIENT_STOCK` (400) |
 | `IllegalArgumentException("포인트가 부족합니다")` | Member entity | `INSUFFICIENT_POINT` (400) |
 
-### 예시: Product 도메인
+### 템플릿
 
-```java
-// gift/product/ProductErrorCode.java
-package gift.product;
+- ErrorCode enum: `domain-error-code-template.java` 참조
+- Exception 클래스: `domain-exception-template.java` 참조
 
-import gift.error.ErrorCode;
-import org.springframework.http.HttpStatus;
-
-public enum ProductErrorCode implements ErrorCode {
-    PRODUCT_NOT_FOUND("PRODUCT_NOT_FOUND", "상품을 찾을 수 없습니다.", HttpStatus.NOT_FOUND);
-
-    private final String code;
-    private final String message;
-    private final HttpStatus httpStatus;
-
-    ProductErrorCode(final String code, final String message, final HttpStatus httpStatus) {
-        this.code = code;
-        this.message = message;
-        this.httpStatus = httpStatus;
-    }
-
-    @Override
-    public String getCode() { return code; }
-    @Override
-    public String getMessage() { return message; }
-    @Override
-    public HttpStatus getHttpStatus() { return httpStatus; }
-}
-```
-
-```java
-// gift/product/ProductException.java
-package gift.product;
-
-import gift.error.BusinessException;
-
-public class ProductException extends BusinessException {
-    public ProductException(final ProductErrorCode errorCode) {
-        super(errorCode);
-    }
-}
-```
+`{Domain}`, `{DOMAIN}`, `{domain}`, `{도메인}`을 실제 값으로 치환하여 사용한다.
 
 ---
 
