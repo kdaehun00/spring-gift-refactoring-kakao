@@ -52,7 +52,6 @@ public class MemberService {
         Member member = memberRepository.findById(id)
             .orElseThrow(() -> new MemberException(MemberErrorCode.MEMBER_NOT_FOUND));
         member.update(email, password);
-        memberRepository.save(member);
     }
 
     @Transactional
