@@ -72,7 +72,7 @@
 - [x] refactor(order): 카카오 메시지 API URL을 설정으로 추출
 - [x] fix(option): 재고 차감 시 비관적 락 적용
 - [x] fix(auth): KakaoAuthController.callback에 @Transactional 추가
-- [ ] refactor: 불필요한 save() 호출 제거
+- [x] refactor: 불필요한 save() 호출 제거
 - [ ] refactor: Controller 반환 타입 와일드카드 제거
 
 ### 스킬 정비
