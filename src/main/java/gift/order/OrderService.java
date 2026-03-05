@@ -45,7 +45,7 @@ public class OrderService {
         Member member = memberRepository.findById(memberId)
             .orElseThrow(() -> new CommonException(CommonErrorCode.UNAUTHORIZED));
 
-        Option option = optionRepository.findById(optionId)
+        Option option = optionRepository.findByIdForUpdate(optionId)
             .orElseThrow(() -> new OrderException(OrderErrorCode.OPTION_NOT_FOUND));
 
         option.subtractQuantity(quantity);
