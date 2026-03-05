@@ -4,6 +4,7 @@ import gift.auth.LoginMember;
 import gift.member.Member;
 import jakarta.validation.Valid;
 import java.net.URI;
+import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -22,14 +23,14 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<?> getOrders(@LoginMember Member member, Pageable pageable) {
+    public ResponseEntity<Page<OrderResponse>> getOrders(@LoginMember Member member, Pageable pageable) {
         var orders = orderService.findByMemberId(member.getId(), pageable)
             .map(OrderResponse::from);
         return ResponseEntity.ok(orders);
     }
 
     @PostMapping
-    public ResponseEntity<?> createOrder(
+    public ResponseEntity<OrderResponse> createOrder(
         @LoginMember Member member,
         @Valid @RequestBody OrderRequest request
     ) {

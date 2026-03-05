@@ -73,7 +73,7 @@
 - [x] fix(option): 재고 차감 시 비관적 락 적용
 - [x] fix(auth): KakaoAuthController.callback에 @Transactional 추가
 - [x] refactor: 불필요한 save() 호출 제거
-- [ ] refactor: Controller 반환 타입 와일드카드 제거
+- [x] refactor: Controller 반환 타입 와일드카드 제거
 
 ### 스킬 정비
 - [x] chore: 스킬에서 정적 도구가 잡는 불필요한 내용 제거
