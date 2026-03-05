@@ -68,6 +68,8 @@
 - [x] refactor(wish): @LoginMember 적용으로 인증 보일러플레이트 제거
 - [x] refactor(order): KakaoMessageClient를 인터페이스로 추출
 - [x] refactor(error): ErrorResponse를 record로 변환
+- [x] refactor(auth): 카카오 API URL과 scope를 설정으로 추출
+- [x] refactor(order): 카카오 메시지 API URL을 설정으로 추출
 
 ### 스킬 정비
 - [x] chore: 스킬에서 정적 도구가 잡는 불필요한 내용 제거
