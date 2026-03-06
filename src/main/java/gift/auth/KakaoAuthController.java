@@ -53,7 +53,6 @@ public class KakaoAuthController {
             .build();
     }
 
-    @Transactional
     @GetMapping(path = "/callback")
     public ResponseEntity<TokenResponse> callback(@RequestParam("code") String code) {
         KakaoLoginClient.KakaoTokenResponse kakaoToken = kakaoLoginClient.requestAccessToken(code);
