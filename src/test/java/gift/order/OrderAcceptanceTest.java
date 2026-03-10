@@ -47,7 +47,7 @@ class OrderAcceptanceTest {
                 .param("page", "0")
                 .param("size", "10"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.content").isArray());
+            .andExpect(jsonPath("$.data.content").isArray());
     }
 
     @Test
@@ -73,10 +73,10 @@ class OrderAcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.optionId").value(3))
-            .andExpect(jsonPath("$.quantity").value(1))
-            .andExpect(jsonPath("$.totalPrice").value(1350000))
-            .andExpect(jsonPath("$.message").value("선물입니다"));
+            .andExpect(jsonPath("$.data.optionId").value(3))
+            .andExpect(jsonPath("$.data.quantity").value(1))
+            .andExpect(jsonPath("$.data.totalPrice").value(1350000))
+            .andExpect(jsonPath("$.data.message").value("선물입니다"));
     }
 
     @Test

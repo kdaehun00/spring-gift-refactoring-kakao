@@ -1,6 +1,7 @@
 package gift.order;
 
 import gift.auth.LoginMember;
+import gift.error.ApiResponse;
 import gift.member.Member;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -23,14 +24,16 @@ public class OrderController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<OrderResponse>> getOrders(@LoginMember Member member, Pageable pageable) {
+    public ResponseEntity<ApiResponse<Page<OrderResponse>>> getOrders(
+        @LoginMember Member member, Pageable pageable
+    ) {
         var orders = orderService.findByMemberId(member.getId(), pageable)
             .map(OrderResponse::from);
-        return ResponseEntity.ok(orders);
+        return ResponseEntity.ok(ApiResponse.ok(orders));
     }
 
     @PostMapping
-    public ResponseEntity<OrderResponse> createOrder(
+    public ResponseEntity<ApiResponse<OrderResponse>> createOrder(
         @LoginMember Member member,
         @Valid @RequestBody OrderRequest request
     ) {
@@ -38,6 +41,6 @@ public class OrderController {
             member.getId(), request.optionId(), request.quantity(), request.message()
         );
         return ResponseEntity.created(URI.create("/api/orders/" + saved.getId()))
-            .body(OrderResponse.from(saved));
+            .body(ApiResponse.ok(OrderResponse.from(saved)));
     }
 }
