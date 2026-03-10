@@ -29,7 +29,7 @@ public class ProductController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<Page<ProductResponse>>> getProducts(Pageable pageable) {
-        Page<ProductResponse> products = productService.findAll(pageable).map(ProductResponse::from);
+        Page<ProductResponse> products = productService.findAll(pageable);
         return ResponseEntity.ok(ApiResponse.success(products));
     }
 
@@ -44,11 +44,11 @@ public class ProductController {
         @Valid @RequestBody ProductRequest request
     ) {
         validateName(request.name());
-        Product saved = productService.save(
+        ProductResponse response = productService.save(
             request.name(), request.price(), request.imageUrl(), request.categoryId()
         );
-        return ResponseEntity.created(URI.create("/api/v1/products/" + saved.getId()))
-            .body(ApiResponse.created(ProductResponse.from(saved)));
+        return ResponseEntity.created(URI.create("/api/v1/products/" + response.id()))
+            .body(ApiResponse.created(response));
     }
 
     @PutMapping("/{id}")
@@ -57,10 +57,10 @@ public class ProductController {
         @Valid @RequestBody ProductRequest request
     ) {
         validateName(request.name());
-        Product saved = productService.update(
+        ProductResponse response = productService.update(
             id, request.name(), request.price(), request.imageUrl(), request.categoryId()
         );
-        return ResponseEntity.ok(ApiResponse.success(ProductResponse.from(saved)));
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @DeleteMapping("/{id}")

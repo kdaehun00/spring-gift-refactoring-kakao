@@ -21,8 +21,8 @@ public class ProductService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Product> findAll(Pageable pageable) {
-        return productRepository.findAll(pageable);
+    public Page<ProductResponse> findAll(Pageable pageable) {
+        return productRepository.findAll(pageable).map(ProductResponse::from);
     }
 
     @Transactional(readOnly = true)
@@ -37,20 +37,20 @@ public class ProductService {
     }
 
     @Transactional
-    public Product save(String name, int price, String imageUrl, Long categoryId) {
+    public ProductResponse save(String name, int price, String imageUrl, Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
             .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
-        return productRepository.save(new Product(name, price, imageUrl, category));
+        return ProductResponse.from(productRepository.save(new Product(name, price, imageUrl, category)));
     }
 
     @Transactional
-    public Product update(Long id, String name, int price, String imageUrl, Long categoryId) {
+    public ProductResponse update(Long id, String name, int price, String imageUrl, Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
             .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NOT_FOUND));
         product.update(name, price, imageUrl, category);
-        return product;
+        return ProductResponse.from(product);
     }
 
     @Transactional
