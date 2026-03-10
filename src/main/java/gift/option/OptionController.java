@@ -1,5 +1,6 @@
 package gift.option;
 
+import gift.error.ApiResponse;
 import gift.error.CommonErrorCode;
 import gift.error.CommonException;
 import jakarta.validation.Valid;
@@ -28,15 +29,17 @@ public class OptionController {
     }
 
     @GetMapping
-    public ResponseEntity<List<OptionResponse>> getOptions(@PathVariable Long productId) {
+    public ResponseEntity<ApiResponse<List<OptionResponse>>> getOptions(
+        @PathVariable Long productId
+    ) {
         List<OptionResponse> responses = optionService.findByProductId(productId).stream()
             .map(OptionResponse::from)
             .toList();
-        return ResponseEntity.ok(responses);
+        return ResponseEntity.ok(ApiResponse.ok(responses));
     }
 
     @PostMapping
-    public ResponseEntity<OptionResponse> createOption(
+    public ResponseEntity<ApiResponse<OptionResponse>> createOption(
         @PathVariable Long productId,
         @Valid @RequestBody OptionRequest request
     ) {
@@ -45,16 +48,16 @@ public class OptionController {
         Option saved = optionService.createOption(productId, request.name(), request.quantity());
         URI location = URI.create("/api/products/" + productId + "/options/" + saved.getId());
         return ResponseEntity.created(location)
-            .body(OptionResponse.from(saved));
+            .body(ApiResponse.ok(OptionResponse.from(saved)));
     }
 
     @DeleteMapping(path = "/{optionId}")
-    public ResponseEntity<Void> deleteOption(
+    public ResponseEntity<ApiResponse<Void>> deleteOption(
         @PathVariable Long productId,
         @PathVariable Long optionId
     ) {
         optionService.deleteOption(productId, optionId);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.ok(null));
     }
 
     private void validateName(String name) {

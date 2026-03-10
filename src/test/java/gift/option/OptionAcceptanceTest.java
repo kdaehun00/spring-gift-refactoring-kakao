@@ -32,8 +32,8 @@ class OptionAcceptanceTest {
     void getOptions() throws Exception {
         mockMvc.perform(get("/api/products/{productId}/options", 1L))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$").isArray())
-            .andExpect(jsonPath("$.length()").value(2));
+            .andExpect(jsonPath("$.data").isArray())
+            .andExpect(jsonPath("$.data.length()").value(2));
     }
 
     @Test
@@ -53,8 +53,8 @@ class OptionAcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.name").value("새 옵션"))
-            .andExpect(jsonPath("$.quantity").value(100));
+            .andExpect(jsonPath("$.data.name").value("새 옵션"))
+            .andExpect(jsonPath("$.data.quantity").value(100));
     }
 
     @Test
@@ -62,7 +62,8 @@ class OptionAcceptanceTest {
     void deleteOption() throws Exception {
         // productId=1에는 옵션 2개 존재 (optionId=1, 2)
         mockMvc.perform(delete("/api/products/{productId}/options/{optionId}", 1L, 1L))
-            .andExpect(status().isNoContent());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.code").value("SUCCESS"));
     }
 
     @Test
