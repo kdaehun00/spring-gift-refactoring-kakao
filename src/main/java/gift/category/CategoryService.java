@@ -18,16 +18,16 @@ public class CategoryService {
     }
 
     @Transactional
-    public Category save(Category category) {
-        return categoryRepository.save(category);
+    public CategoryResponse save(Category category) {
+        return CategoryResponse.from(categoryRepository.save(category));
     }
 
     @Transactional
-    public Category update(Long id, String name, String color, String imageUrl, String description) {
+    public CategoryResponse update(Long id, String name, String color, String imageUrl, String description) {
         Category category = categoryRepository.findById(id)
             .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
         category.update(name, color, imageUrl, description);
-        return category;
+        return CategoryResponse.from(category);
     }
 
     @Transactional

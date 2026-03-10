@@ -35,9 +35,9 @@ public class CategoryController {
     public ResponseEntity<ApiResponse<CategoryResponse>> createCategory(
         @Valid @RequestBody CategoryRequest request
     ) {
-        Category saved = categoryService.save(request.toEntity());
-        return ResponseEntity.created(URI.create("/api/v1/categories/" + saved.getId()))
-            .body(ApiResponse.created(CategoryResponse.from(saved)));
+        CategoryResponse response = categoryService.save(request.toEntity());
+        return ResponseEntity.created(URI.create("/api/v1/categories/" + response.id()))
+            .body(ApiResponse.created(response));
     }
 
     @PutMapping("/{id}")
@@ -45,10 +45,10 @@ public class CategoryController {
         @PathVariable Long id,
         @Valid @RequestBody CategoryRequest request
     ) {
-        Category category = categoryService.update(
+        CategoryResponse response = categoryService.update(
             id, request.name(), request.color(), request.imageUrl(), request.description()
         );
-        return ResponseEntity.ok(ApiResponse.success(CategoryResponse.from(category)));
+        return ResponseEntity.ok(ApiResponse.success(response));
     }
 
     @DeleteMapping("/{id}")
