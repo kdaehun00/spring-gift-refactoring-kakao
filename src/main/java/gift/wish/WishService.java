@@ -1,7 +1,7 @@
 package gift.wish;
 
-import gift.error.CommonErrorCode;
-import gift.error.CommonException;
+import gift.global.error.CommonErrorCode;
+import gift.global.error.CommonException;
 import gift.product.Product;
 import gift.product.ProductRepository;
 import org.springframework.data.domain.Page;

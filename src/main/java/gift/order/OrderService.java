@@ -1,7 +1,7 @@
 package gift.order;
 
-import gift.error.CommonErrorCode;
-import gift.error.CommonException;
+import gift.global.error.CommonErrorCode;
+import gift.global.error.CommonException;
 import gift.member.Member;
 import gift.member.MemberRepository;
 import gift.option.Option;

@@ -1,4 +1,4 @@
-package gift.error;
+package gift.global.error;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.MethodArgumentNotValidException;

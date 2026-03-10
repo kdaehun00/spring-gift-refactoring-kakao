@@ -1,8 +1,8 @@
 package gift.member;
 
-import gift.auth.JwtProvider;
-import gift.auth.TokenResponse;
-import gift.error.ApiResponse;
+import gift.global.auth.JwtProvider;
+import gift.global.auth.TokenResponse;
+import gift.global.common.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;

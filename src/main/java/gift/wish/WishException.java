@@ -1,6 +1,6 @@
 package gift.wish;
 
-import gift.error.BusinessException;
+import gift.global.error.BusinessException;
 
 public class WishException extends BusinessException {
     public WishException(final WishErrorCode errorCode) {

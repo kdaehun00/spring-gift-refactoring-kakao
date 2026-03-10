@@ -1,6 +1,6 @@
 package gift.wish;
 
-import gift.error.ErrorCode;
+import gift.global.error.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 public enum WishErrorCode implements ErrorCode {

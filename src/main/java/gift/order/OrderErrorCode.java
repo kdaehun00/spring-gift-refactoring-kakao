@@ -1,6 +1,6 @@
 package gift.order;
 
-import gift.error.ErrorCode;
+import gift.global.error.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 public enum OrderErrorCode implements ErrorCode {

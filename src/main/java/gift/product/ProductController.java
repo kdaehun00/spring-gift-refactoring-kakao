@@ -1,8 +1,8 @@
 package gift.product;
 
-import gift.error.ApiResponse;
-import gift.error.CommonErrorCode;
-import gift.error.CommonException;
+import gift.global.common.ApiResponse;
+import gift.global.error.CommonErrorCode;
+import gift.global.error.CommonException;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;

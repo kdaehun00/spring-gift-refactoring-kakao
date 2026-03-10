@@ -1,7 +1,7 @@
 package gift.order;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.auth.JwtProvider;
+import gift.global.auth.JwtProvider;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

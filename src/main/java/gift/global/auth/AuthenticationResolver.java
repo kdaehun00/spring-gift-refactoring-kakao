@@ -1,4 +1,4 @@
-package gift.auth;
+package gift.global.auth;
 
 import gift.member.Member;
 import gift.member.MemberRepository;

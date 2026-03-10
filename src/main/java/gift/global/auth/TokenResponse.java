@@ -1,4 +1,4 @@
-package gift.auth;
+package gift.global.auth;
 
 /**
  * Response containing a JWT access token.

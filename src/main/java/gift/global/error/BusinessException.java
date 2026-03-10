@@ -1,4 +1,4 @@
-package gift.error;
+package gift.global.error;
 
 public abstract class BusinessException extends RuntimeException {
     private final ErrorCode errorCode;

@@ -1,6 +1,6 @@
 package gift.category;
 
-import gift.error.BusinessException;
+import gift.global.error.BusinessException;
 
 public class CategoryException extends BusinessException {
     public CategoryException(final CategoryErrorCode errorCode) {

@@ -1,7 +1,7 @@
-package gift.auth;
+package gift.global.auth;
 
-import gift.error.CommonErrorCode;
-import gift.error.CommonException;
+import gift.global.error.CommonErrorCode;
+import gift.global.error.CommonException;
 import gift.member.Member;
 import org.springframework.core.MethodParameter;
 import org.springframework.stereotype.Component;

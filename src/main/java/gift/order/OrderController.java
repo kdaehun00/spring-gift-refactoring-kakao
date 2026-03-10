@@ -1,7 +1,7 @@
 package gift.order;
 
-import gift.auth.LoginMember;
-import gift.error.ApiResponse;
+import gift.global.auth.LoginMember;
+import gift.global.common.ApiResponse;
 import gift.member.Member;
 import jakarta.validation.Valid;
 import java.net.URI;

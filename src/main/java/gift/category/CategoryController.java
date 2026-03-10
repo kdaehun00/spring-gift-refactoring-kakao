@@ -1,6 +1,6 @@
 package gift.category;
 
-import gift.error.ApiResponse;
+import gift.global.common.ApiResponse;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;

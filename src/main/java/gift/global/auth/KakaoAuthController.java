@@ -1,6 +1,6 @@
-package gift.auth;
+package gift.global.auth;
 
-import gift.error.ApiResponse;
+import gift.global.common.ApiResponse;
 import gift.member.Member;
 import gift.member.MemberRepository;
 import org.springframework.http.HttpHeaders;

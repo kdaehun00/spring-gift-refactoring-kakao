@@ -1,4 +1,4 @@
-package gift.auth;
+package gift.global.auth;
 
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.security.Keys;

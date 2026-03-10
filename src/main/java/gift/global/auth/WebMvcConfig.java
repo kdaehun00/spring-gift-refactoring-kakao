@@ -1,4 +1,4 @@
-package gift.auth;
+package gift.global.auth;
 
 import java.util.List;
 import org.springframework.context.annotation.Configuration;

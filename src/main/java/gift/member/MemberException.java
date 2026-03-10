@@ -1,6 +1,6 @@
 package gift.member;
 
-import gift.error.BusinessException;
+import gift.global.error.BusinessException;
 
 public class MemberException extends BusinessException {
     public MemberException(final MemberErrorCode errorCode) {

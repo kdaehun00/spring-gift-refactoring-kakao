@@ -1,6 +1,6 @@
 package gift.member;
 
-import gift.error.ErrorCode;
+import gift.global.error.ErrorCode;
 import org.springframework.http.HttpStatus;
 
 public enum MemberErrorCode implements ErrorCode {
