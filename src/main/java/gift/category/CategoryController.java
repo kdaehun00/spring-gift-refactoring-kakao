@@ -25,9 +25,7 @@ public class CategoryController {
 
     @GetMapping
     public ResponseEntity<ApiResponse<List<CategoryResponse>>> getCategories() {
-        List<CategoryResponse> categories = categoryService.findAll().stream()
-            .map(CategoryResponse::from)
-            .toList();
+        List<CategoryResponse> categories = categoryService.findAllResponses();
         return ResponseEntity.ok(ApiResponse.success(categories));
     }
 

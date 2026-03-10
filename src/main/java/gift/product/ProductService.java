@@ -33,6 +33,11 @@ public class ProductService {
             .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NOT_FOUND));
     }
 
+    @Transactional(readOnly = true)
+    public ProductResponse findByIdResponse(Long id) {
+        return ProductResponse.from(findById(id));
+    }
+
     @Transactional
     public ProductResponse save(String name, int price, String imageUrl, Long categoryId) {
         Category category = categoryRepository.findById(categoryId)
