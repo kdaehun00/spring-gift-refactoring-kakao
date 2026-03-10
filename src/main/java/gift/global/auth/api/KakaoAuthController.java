@@ -1,5 +1,6 @@
-package gift.global.auth;
+package gift.global.auth.api;
 
+import gift.global.auth.service.KakaoAuthService;
 import gift.global.common.ApiResponse;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;

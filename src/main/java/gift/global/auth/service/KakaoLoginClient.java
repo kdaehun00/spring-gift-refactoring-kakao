@@ -1,4 +1,4 @@
-package gift.global.auth;
+package gift.global.auth.service;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;

@@ -1,5 +1,6 @@
-package gift.global.auth;
+package gift.global.auth.service;
 
+import gift.global.auth.JwtProvider;
 import gift.member.Member;
 import gift.member.MemberRepository;
 import lombok.RequiredArgsConstructor;
