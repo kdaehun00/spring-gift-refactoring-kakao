@@ -2,6 +2,8 @@ package gift.global.auth;
 
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
 import com.fasterxml.jackson.annotation.JsonProperty;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
 import org.springframework.stereotype.Component;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.web.client.RestClient;
@@ -26,7 +28,7 @@ public class KakaoLoginClient {
 
         return restClient.post()
             .uri(properties.tokenUrl())
-            .header("Content-Type", "application/x-www-form-urlencoded")
+            .contentType(MediaType.APPLICATION_FORM_URLENCODED)
             .body(params)
             .retrieve()
             .body(KakaoTokenResponse.class);
@@ -35,7 +37,7 @@ public class KakaoLoginClient {
     public KakaoUserResponse requestUserInfo(String accessToken) {
         return restClient.get()
             .uri(properties.userInfoUrl())
-            .header("Authorization", "Bearer " + accessToken)
+            .header(HttpHeaders.AUTHORIZATION, "Bearer " + accessToken)
             .retrieve()
             .body(KakaoUserResponse.class);
     }
