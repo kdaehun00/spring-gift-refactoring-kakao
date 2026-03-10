@@ -20,20 +20,20 @@ public class WishService {
     }
 
     @Transactional(readOnly = true)
-    public Page<Wish> findByMemberId(Long memberId, Pageable pageable) {
-        return wishRepository.findByMemberId(memberId, pageable);
+    public Page<WishResponse> findByMemberId(Long memberId, Pageable pageable) {
+        return wishRepository.findByMemberId(memberId, pageable).map(WishResponse::from);
     }
 
     @Transactional
     public WishAddResult addWish(Long memberId, Long productId) {
         var existing = wishRepository.findByMemberIdAndProductId(memberId, productId);
         if (existing.isPresent()) {
-            return new WishAddResult(existing.get(), false);
+            return new WishAddResult(WishResponse.from(existing.get()), false);
         }
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new WishException(WishErrorCode.PRODUCT_NOT_FOUND));
         Wish saved = wishRepository.save(new Wish(memberId, product));
-        return new WishAddResult(saved, true);
+        return new WishAddResult(WishResponse.from(saved), true);
     }
 
     @Transactional

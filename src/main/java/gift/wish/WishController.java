@@ -30,7 +30,7 @@ public class WishController {
         @LoginMember Member member,
         Pageable pageable
     ) {
-        var wishes = wishService.findByMemberId(member.getId(), pageable).map(WishResponse::from);
+        var wishes = wishService.findByMemberId(member.getId(), pageable);
         return ResponseEntity.ok(ApiResponse.success(wishes));
     }
 
@@ -41,10 +41,10 @@ public class WishController {
     ) {
         var result = wishService.addWish(member.getId(), request.productId());
         if (!result.created()) {
-            return ResponseEntity.ok(ApiResponse.success(WishResponse.from(result.wish())));
+            return ResponseEntity.ok(ApiResponse.success(result.response()));
         }
-        return ResponseEntity.created(URI.create("/api/v1/wishes/" + result.wish().getId()))
-            .body(ApiResponse.created(WishResponse.from(result.wish())));
+        return ResponseEntity.created(URI.create("/api/v1/wishes/" + result.response().id()))
+            .body(ApiResponse.created(result.response()));
     }
 
     @DeleteMapping("/{id}")

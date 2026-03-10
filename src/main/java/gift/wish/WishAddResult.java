@@ -1,4 +1,4 @@
 package gift.wish;
 
-public record WishAddResult(Wish wish, boolean created) {
+public record WishAddResult(WishResponse response, boolean created) {
 }
