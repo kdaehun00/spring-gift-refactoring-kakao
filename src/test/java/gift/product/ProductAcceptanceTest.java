@@ -35,7 +35,7 @@ class ProductAcceptanceTest {
                 .param("page", "0")
                 .param("size", "10"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.content").isArray());
+            .andExpect(jsonPath("$.data.content").isArray());
     }
 
     @Test
@@ -43,8 +43,8 @@ class ProductAcceptanceTest {
     void getProduct() throws Exception {
         mockMvc.perform(get("/api/products/{id}", 1L))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.id").value(1))
-            .andExpect(jsonPath("$.name").isNotEmpty());
+            .andExpect(jsonPath("$.data.id").value(1))
+            .andExpect(jsonPath("$.data.name").isNotEmpty());
     }
 
     @Test
@@ -64,8 +64,8 @@ class ProductAcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.name").value("테스트상품"))
-            .andExpect(jsonPath("$.price").value(10000));
+            .andExpect(jsonPath("$.data.name").value("테스트상품"))
+            .andExpect(jsonPath("$.data.price").value(10000));
     }
 
     @Test
@@ -77,7 +77,7 @@ class ProductAcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.name").value("수정된상품"));
+            .andExpect(jsonPath("$.data.name").value("수정된상품"));
     }
 
     @Test
@@ -91,10 +91,11 @@ class ProductAcceptanceTest {
                 .content(objectMapper.writeValueAsString(request)))
             .andReturn().getResponse().getContentAsString();
 
-        Long createdId = objectMapper.readTree(response).get("id").asLong();
+        Long createdId = objectMapper.readTree(response).get("data").get("id").asLong();
 
         mockMvc.perform(delete("/api/products/{id}", createdId))
-            .andExpect(status().isNoContent());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.code").value("SUCCESS"));
     }
 
     @Test

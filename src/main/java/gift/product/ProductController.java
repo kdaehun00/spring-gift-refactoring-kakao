@@ -1,5 +1,6 @@
 package gift.product;
 
+import gift.error.ApiResponse;
 import gift.error.CommonErrorCode;
 import gift.error.CommonException;
 import jakarta.validation.Valid;
@@ -27,29 +28,31 @@ public class ProductController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<ProductResponse>> getProducts(Pageable pageable) {
+    public ResponseEntity<ApiResponse<Page<ProductResponse>>> getProducts(Pageable pageable) {
         Page<ProductResponse> products = productService.findAll(pageable).map(ProductResponse::from);
-        return ResponseEntity.ok(products);
+        return ResponseEntity.ok(ApiResponse.ok(products));
     }
 
     @GetMapping("/{id}")
-    public ResponseEntity<ProductResponse> getProduct(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<ProductResponse>> getProduct(@PathVariable Long id) {
         Product product = productService.findById(id);
-        return ResponseEntity.ok(ProductResponse.from(product));
+        return ResponseEntity.ok(ApiResponse.ok(ProductResponse.from(product)));
     }
 
     @PostMapping
-    public ResponseEntity<ProductResponse> createProduct(@Valid @RequestBody ProductRequest request) {
+    public ResponseEntity<ApiResponse<ProductResponse>> createProduct(
+        @Valid @RequestBody ProductRequest request
+    ) {
         validateName(request.name());
         Product saved = productService.save(
             request.name(), request.price(), request.imageUrl(), request.categoryId()
         );
         return ResponseEntity.created(URI.create("/api/products/" + saved.getId()))
-            .body(ProductResponse.from(saved));
+            .body(ApiResponse.ok(ProductResponse.from(saved)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<ProductResponse> updateProduct(
+    public ResponseEntity<ApiResponse<ProductResponse>> updateProduct(
         @PathVariable Long id,
         @Valid @RequestBody ProductRequest request
     ) {
@@ -57,13 +60,13 @@ public class ProductController {
         Product saved = productService.update(
             id, request.name(), request.price(), request.imageUrl(), request.categoryId()
         );
-        return ResponseEntity.ok(ProductResponse.from(saved));
+        return ResponseEntity.ok(ApiResponse.ok(ProductResponse.from(saved)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteProduct(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> deleteProduct(@PathVariable Long id) {
         productService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.ok(null));
     }
 
     private void validateName(String name) {
