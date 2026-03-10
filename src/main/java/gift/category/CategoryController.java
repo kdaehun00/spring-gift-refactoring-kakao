@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/categories")
+@RequestMapping("/api/v1/categories")
 public class CategoryController {
     private final CategoryService categoryService;
 
@@ -36,7 +36,7 @@ public class CategoryController {
         @Valid @RequestBody CategoryRequest request
     ) {
         Category saved = categoryService.save(request.toEntity());
-        return ResponseEntity.created(URI.create("/api/categories/" + saved.getId()))
+        return ResponseEntity.created(URI.create("/api/v1/categories/" + saved.getId()))
             .body(ApiResponse.created(CategoryResponse.from(saved)));
     }
 

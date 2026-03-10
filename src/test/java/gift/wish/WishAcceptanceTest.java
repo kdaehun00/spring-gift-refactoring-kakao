@@ -41,7 +41,7 @@ class WishAcceptanceTest {
     void getWishes() throws Exception {
         String token = obtainAccessToken();
 
-        mockMvc.perform(get("/api/wishes")
+        mockMvc.perform(get("/api/v1/wishes")
                 .header("Authorization", "Bearer " + token)
                 .param("page", "0")
                 .param("size", "10"))
@@ -53,7 +53,7 @@ class WishAcceptanceTest {
     @Test
     @DisplayName("인증 없이 위시리스트를 조회하면 401을 반환한다")
     void getWishes_Unauthorized() throws Exception {
-        mockMvc.perform(get("/api/wishes")
+        mockMvc.perform(get("/api/v1/wishes")
                 .header("Authorization", "Bearer invalid-token")
                 .param("page", "0")
                 .param("size", "10"))
@@ -68,7 +68,7 @@ class WishAcceptanceTest {
         // productId=5는 user1의 위시리스트에 없는 상품
         var request = new WishRequest(5L);
 
-        mockMvc.perform(post("/api/wishes")
+        mockMvc.perform(post("/api/v1/wishes")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
@@ -83,7 +83,7 @@ class WishAcceptanceTest {
         // productId=1은 user1의 위시리스트에 이미 존재
         var request = new WishRequest(1L);
 
-        mockMvc.perform(post("/api/wishes")
+        mockMvc.perform(post("/api/v1/wishes")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
@@ -96,7 +96,7 @@ class WishAcceptanceTest {
     void removeWish() throws Exception {
         String token = obtainAccessToken();
         // wishId=1은 user1(memberId=2)의 위시
-        mockMvc.perform(delete("/api/wishes/{id}", 1L)
+        mockMvc.perform(delete("/api/v1/wishes/{id}", 1L)
                 .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.code").value("NO_CONTENT"));
@@ -108,7 +108,7 @@ class WishAcceptanceTest {
         String token = obtainAccessToken();
         var request = new WishRequest(999L);
 
-        mockMvc.perform(post("/api/wishes")
+        mockMvc.perform(post("/api/v1/wishes")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
@@ -121,7 +121,7 @@ class WishAcceptanceTest {
     void removeWish_NotFound() throws Exception {
         String token = obtainAccessToken();
 
-        mockMvc.perform(delete("/api/wishes/{id}", 999L)
+        mockMvc.perform(delete("/api/v1/wishes/{id}", 999L)
                 .header("Authorization", "Bearer " + token))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.code").value("WISH_NOT_FOUND"));

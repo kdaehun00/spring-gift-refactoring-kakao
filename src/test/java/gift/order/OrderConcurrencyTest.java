@@ -57,7 +57,7 @@ class OrderConcurrencyTest {
                 try {
                     ready.countDown();
                     start.await();
-                    var result = mockMvc.perform(post("/api/orders")
+                    var result = mockMvc.perform(post("/api/v1/orders")
                             .header("Authorization", "Bearer " + token)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(body))

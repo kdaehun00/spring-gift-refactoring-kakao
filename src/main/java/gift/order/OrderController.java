@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/orders")
+@RequestMapping("/api/v1/orders")
 public class OrderController {
     private final OrderService orderService;
 
@@ -40,7 +40,7 @@ public class OrderController {
         var saved = orderService.createOrder(
             member.getId(), request.optionId(), request.quantity(), request.message()
         );
-        return ResponseEntity.created(URI.create("/api/orders/" + saved.getId()))
+        return ResponseEntity.created(URI.create("/api/v1/orders/" + saved.getId()))
             .body(ApiResponse.created(OrderResponse.from(saved)));
     }
 }

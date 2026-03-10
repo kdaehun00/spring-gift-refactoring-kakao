@@ -20,7 +20,7 @@ import org.springframework.web.bind.annotation.RestController;
  * Option names are validated against allowed characters and length constraints.
  */
 @RestController
-@RequestMapping(path = "/api/products/{productId}/options")
+@RequestMapping(path = "/api/v1/products/{productId}/options")
 public class OptionController {
     private final OptionService optionService;
 
@@ -46,7 +46,7 @@ public class OptionController {
         validateName(request.name());
 
         Option saved = optionService.createOption(productId, request.name(), request.quantity());
-        URI location = URI.create("/api/products/" + productId + "/options/" + saved.getId());
+        URI location = URI.create("/api/v1/products/" + productId + "/options/" + saved.getId());
         return ResponseEntity.created(location)
             .body(ApiResponse.created(OptionResponse.from(saved)));
     }

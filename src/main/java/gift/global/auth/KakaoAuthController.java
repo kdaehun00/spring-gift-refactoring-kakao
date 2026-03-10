@@ -20,7 +20,7 @@ import org.springframework.web.util.UriComponentsBuilder;
  *    retrieves user info, auto-registers the member if new, and issues a service JWT
  */
 @RestController
-@RequestMapping(path = "/api/auth/kakao")
+@RequestMapping(path = "/api/v1/auth/kakao")
 public class KakaoAuthController {
     private final KakaoLoginProperties properties;
     private final KakaoLoginClient kakaoLoginClient;

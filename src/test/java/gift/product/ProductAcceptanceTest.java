@@ -31,7 +31,7 @@ class ProductAcceptanceTest {
     @Test
     @DisplayName("상품 목록을 페이지네이션으로 조회한다")
     void getProducts() throws Exception {
-        mockMvc.perform(get("/api/products")
+        mockMvc.perform(get("/api/v1/products")
                 .param("page", "0")
                 .param("size", "10"))
             .andExpect(status().isOk())
@@ -41,7 +41,7 @@ class ProductAcceptanceTest {
     @Test
     @DisplayName("상품을 단건 조회한다")
     void getProduct() throws Exception {
-        mockMvc.perform(get("/api/products/{id}", 1L))
+        mockMvc.perform(get("/api/v1/products/{id}", 1L))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.data.id").value(1))
             .andExpect(jsonPath("$.data.name").isNotEmpty());
@@ -50,7 +50,7 @@ class ProductAcceptanceTest {
     @Test
     @DisplayName("존재하지 않는 상품을 조회하면 404를 반환한다")
     void getProduct_NotFound() throws Exception {
-        mockMvc.perform(get("/api/products/{id}", 999L))
+        mockMvc.perform(get("/api/v1/products/{id}", 999L))
             .andExpect(status().isNotFound())
             .andExpect(jsonPath("$.code").value("PRODUCT_NOT_FOUND"));
     }
@@ -60,7 +60,7 @@ class ProductAcceptanceTest {
     void createProduct() throws Exception {
         var request = new ProductRequest("테스트상품", 10000, "https://example.com/images/test.jpg", 1L);
 
-        mockMvc.perform(post("/api/products")
+        mockMvc.perform(post("/api/v1/products")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated())
@@ -73,7 +73,7 @@ class ProductAcceptanceTest {
     void updateProduct() throws Exception {
         var request = new ProductRequest("수정된상품", 5000, "https://example.com/images/updated.jpg", 1L);
 
-        mockMvc.perform(put("/api/products/{id}", 1L)
+        mockMvc.perform(put("/api/v1/products/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
@@ -86,14 +86,14 @@ class ProductAcceptanceTest {
         // 시드 데이터의 상품은 옵션/위시/주문 FK 제약이 있으므로 새로 생성 후 삭제
         var request = new ProductRequest("삭제용상품", 1000, "https://example.com/images/temp.jpg", 1L);
 
-        String response = mockMvc.perform(post("/api/products")
+        String response = mockMvc.perform(post("/api/v1/products")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andReturn().getResponse().getContentAsString();
 
         Long createdId = objectMapper.readTree(response).get("data").get("id").asLong();
 
-        mockMvc.perform(delete("/api/products/{id}", createdId))
+        mockMvc.perform(delete("/api/v1/products/{id}", createdId))
             .andExpect(status().isOk())
             .andExpect(jsonPath("$.code").value("NO_CONTENT"));
     }
@@ -103,7 +103,7 @@ class ProductAcceptanceTest {
     void updateProduct_NotFound() throws Exception {
         var request = new ProductRequest("없는상품", 5000, "https://example.com/images/none.jpg", 1L);
 
-        mockMvc.perform(put("/api/products/{id}", 999L)
+        mockMvc.perform(put("/api/v1/products/{id}", 999L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isNotFound())
@@ -115,7 +115,7 @@ class ProductAcceptanceTest {
     void createProduct_CategoryNotFound() throws Exception {
         var request = new ProductRequest("테스트상품", 10000, "https://example.com/images/test.jpg", 999L);
 
-        mockMvc.perform(post("/api/products")
+        mockMvc.perform(post("/api/v1/products")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isNotFound())

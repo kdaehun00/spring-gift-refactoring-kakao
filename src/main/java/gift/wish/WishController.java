@@ -17,7 +17,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/wishes")
+@RequestMapping("/api/v1/wishes")
 public class WishController {
     private final WishService wishService;
 
@@ -43,7 +43,7 @@ public class WishController {
         if (!result.created()) {
             return ResponseEntity.ok(ApiResponse.success(WishResponse.from(result.wish())));
         }
-        return ResponseEntity.created(URI.create("/api/wishes/" + result.wish().getId()))
+        return ResponseEntity.created(URI.create("/api/v1/wishes/" + result.wish().getId()))
             .body(ApiResponse.created(WishResponse.from(result.wish())));
     }
 

@@ -42,7 +42,7 @@ class OrderAcceptanceTest {
     void getOrders() throws Exception {
         String token = obtainAccessToken();
 
-        mockMvc.perform(get("/api/orders")
+        mockMvc.perform(get("/api/v1/orders")
                 .header("Authorization", "Bearer " + token)
                 .param("page", "0")
                 .param("size", "10"))
@@ -53,7 +53,7 @@ class OrderAcceptanceTest {
     @Test
     @DisplayName("인증 없이 주문 목록을 조회하면 401을 반환한다")
     void getOrders_Unauthorized() throws Exception {
-        mockMvc.perform(get("/api/orders")
+        mockMvc.perform(get("/api/v1/orders")
                 .header("Authorization", "Bearer invalid-token")
                 .param("page", "0")
                 .param("size", "10"))
@@ -68,7 +68,7 @@ class OrderAcceptanceTest {
         // optionId=3 (아이폰 블루/256GB, 수량 30, 가격 1350000)
         var request = new OrderRequest(3L, 1, "선물입니다");
 
-        mockMvc.perform(post("/api/orders")
+        mockMvc.perform(post("/api/v1/orders")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
@@ -85,7 +85,7 @@ class OrderAcceptanceTest {
         String token = obtainAccessToken();
         var request = new OrderRequest(999L, 1, null);
 
-        mockMvc.perform(post("/api/orders")
+        mockMvc.perform(post("/api/v1/orders")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
@@ -102,7 +102,7 @@ class OrderAcceptanceTest {
         var orderRequest = new OrderRequest(1L, 1, null);
 
         // 주문 전: 위시 2개 확인
-        mockMvc.perform(get("/api/wishes")
+        mockMvc.perform(get("/api/v1/wishes")
                 .header("Authorization", "Bearer " + token)
                 .param("page", "0")
                 .param("size", "10"))
@@ -110,14 +110,14 @@ class OrderAcceptanceTest {
             .andExpect(jsonPath("$.data.content.length()").value(2));
 
         // 주문 생성
-        mockMvc.perform(post("/api/orders")
+        mockMvc.perform(post("/api/v1/orders")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(orderRequest)))
             .andExpect(status().isCreated());
 
         // 주문 후: 위시 1개로 감소 (productId=1 위시 삭제됨)
-        mockMvc.perform(get("/api/wishes")
+        mockMvc.perform(get("/api/v1/wishes")
                 .header("Authorization", "Bearer " + token)
                 .param("page", "0")
                 .param("size", "10"))
@@ -132,7 +132,7 @@ class OrderAcceptanceTest {
         // optionId=3 (아이폰 블루/256GB, productId=2) - user1의 위시에 없음
         var request = new OrderRequest(3L, 1, null);
 
-        mockMvc.perform(post("/api/orders")
+        mockMvc.perform(post("/api/v1/orders")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
@@ -146,7 +146,7 @@ class OrderAcceptanceTest {
         // optionId=1 (맥북 스페이스 블랙 / M1 Pro, 재고 10개)
         var request = new OrderRequest(1L, 9999, null);
 
-        mockMvc.perform(post("/api/orders")
+        mockMvc.perform(post("/api/v1/orders")
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
