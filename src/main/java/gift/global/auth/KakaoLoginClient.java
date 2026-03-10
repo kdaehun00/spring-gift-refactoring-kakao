@@ -10,6 +10,13 @@ import org.springframework.web.client.RestClient;
 
 @Component
 public class KakaoLoginClient {
+    private static final String GRANT_TYPE = "grant_type";
+    private static final String AUTHORIZATION_CODE = "authorization_code";
+    private static final String CLIENT_ID = "client_id";
+    private static final String REDIRECT_URI = "redirect_uri";
+    private static final String CODE = "code";
+    private static final String CLIENT_SECRET = "client_secret";
+
     private final KakaoLoginProperties properties;
     private final RestClient restClient;
 
@@ -20,11 +27,11 @@ public class KakaoLoginClient {
 
     public KakaoTokenResponse requestAccessToken(String code) {
         LinkedMultiValueMap<String, String> params = new LinkedMultiValueMap<>();
-        params.add("grant_type", "authorization_code");
-        params.add("client_id", properties.clientId());
-        params.add("redirect_uri", properties.redirectUri());
-        params.add("code", code);
-        params.add("client_secret", properties.clientSecret());
+        params.add(GRANT_TYPE, AUTHORIZATION_CODE);
+        params.add(CLIENT_ID, properties.clientId());
+        params.add(REDIRECT_URI, properties.redirectUri());
+        params.add(CODE, code);
+        params.add(CLIENT_SECRET, properties.clientSecret());
 
         return restClient.post()
             .uri(properties.tokenUrl())

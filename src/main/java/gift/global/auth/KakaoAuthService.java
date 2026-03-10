@@ -8,6 +8,12 @@ import org.springframework.web.util.UriComponentsBuilder;
 
 @Service
 public class KakaoAuthService {
+    private static final String RESPONSE_TYPE = "response_type";
+    private static final String CODE = "code";
+    private static final String CLIENT_ID = "client_id";
+    private static final String REDIRECT_URI = "redirect_uri";
+    private static final String SCOPE = "scope";
+
     private final KakaoLoginProperties properties;
     private final KakaoLoginClient kakaoLoginClient;
     private final MemberRepository memberRepository;
@@ -27,10 +33,10 @@ public class KakaoAuthService {
 
     public String buildAuthorizationUrl() {
         return UriComponentsBuilder.fromUriString(properties.authorizeUrl())
-            .queryParam("response_type", "code")
-            .queryParam("client_id", properties.clientId())
-            .queryParam("redirect_uri", properties.redirectUri())
-            .queryParam("scope", properties.scope())
+            .queryParam(RESPONSE_TYPE, CODE)
+            .queryParam(CLIENT_ID, properties.clientId())
+            .queryParam(REDIRECT_URI, properties.redirectUri())
+            .queryParam(SCOPE, properties.scope())
             .build()
             .toUriString();
     }
