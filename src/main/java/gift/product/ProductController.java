@@ -1,11 +1,8 @@
 package gift.product;
 
 import gift.global.common.ApiResponse;
-import gift.global.error.CommonErrorCode;
-import gift.global.error.CommonException;
 import jakarta.validation.Valid;
 import java.net.URI;
-import java.util.List;
 import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -44,10 +41,8 @@ public class ProductController {
     public ResponseEntity<ApiResponse<ProductResponse>> createProduct(
         @Valid @RequestBody ProductRequest request
     ) {
-        validateName(request.name());
-        ProductResponse response = productService.save(
-            request.name(), request.price(), request.imageUrl(), request.categoryId()
-        );
+        productService.validateProductName(request.name());
+        ProductResponse response = productService.save(request);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
             .path("/{id}")
             .buildAndExpand(response.id())
@@ -61,10 +56,8 @@ public class ProductController {
         @PathVariable Long id,
         @Valid @RequestBody ProductRequest request
     ) {
-        validateName(request.name());
-        ProductResponse response = productService.update(
-            id, request.name(), request.price(), request.imageUrl(), request.categoryId()
-        );
+        productService.validateProductName(request.name());
+        ProductResponse response = productService.update(id, request);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 
@@ -74,10 +67,4 @@ public class ProductController {
         return ResponseEntity.ok(ApiResponse.noContent());
     }
 
-    private void validateName(String name) {
-        List<String> errors = ProductNameValidator.validate(name);
-        if (!errors.isEmpty()) {
-            throw new CommonException(CommonErrorCode.INVALID_REQUEST);
-        }
-    }
 }

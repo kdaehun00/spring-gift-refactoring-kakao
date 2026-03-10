@@ -34,7 +34,7 @@ public class CategoryController {
     public ResponseEntity<ApiResponse<CategoryResponse>> createCategory(
         @Valid @RequestBody CategoryRequest request
     ) {
-        CategoryResponse response = categoryService.save(request.toEntity());
+        CategoryResponse response = categoryService.save(request);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
             .path("/{id}")
             .buildAndExpand(response.id())
@@ -48,9 +48,7 @@ public class CategoryController {
         @PathVariable Long id,
         @Valid @RequestBody CategoryRequest request
     ) {
-        CategoryResponse response = categoryService.update(
-            id, request.name(), request.color(), request.imageUrl(), request.description()
-        );
+        CategoryResponse response = categoryService.update(id, request);
         return ResponseEntity.ok(ApiResponse.success(response));
     }
 

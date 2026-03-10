@@ -1,8 +1,6 @@
 package gift.option;
 
 import gift.global.common.ApiResponse;
-import gift.global.error.CommonErrorCode;
-import gift.global.error.CommonException;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -42,9 +40,7 @@ public class OptionController {
         @PathVariable Long productId,
         @Valid @RequestBody OptionRequest request
     ) {
-        validateName(request.name());
-
-        OptionResponse response = optionService.createOption(productId, request.name(), request.quantity());
+        OptionResponse response = optionService.createOption(productId, request);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
             .path("/{id}")
             .buildAndExpand(response.id())
@@ -62,10 +58,4 @@ public class OptionController {
         return ResponseEntity.ok(ApiResponse.noContent());
     }
 
-    private void validateName(String name) {
-        List<String> errors = OptionNameValidator.validate(name);
-        if (!errors.isEmpty()) {
-            throw new CommonException(CommonErrorCode.INVALID_REQUEST);
-        }
-    }
 }

@@ -4,6 +4,8 @@ import gift.category.Category;
 import gift.category.CategoryErrorCode;
 import gift.category.CategoryException;
 import gift.category.CategoryRepository;
+import gift.global.error.CommonErrorCode;
+import gift.global.error.CommonException;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -38,20 +40,32 @@ public class ProductService {
         return ProductResponse.from(findById(id));
     }
 
-    @Transactional
-    public ProductResponse save(String name, int price, String imageUrl, Long categoryId) {
-        Category category = categoryRepository.findById(categoryId)
-            .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
-        return ProductResponse.from(productRepository.save(new Product(name, price, imageUrl, category)));
+    public void validateProductName(String name) {
+        List<String> errors = ProductNameValidator.validate(name);
+        if (!errors.isEmpty()) {
+            throw new CommonException(CommonErrorCode.INVALID_REQUEST);
+        }
+    }
+
+    public List<String> validateProductName(String name, boolean allowKakao) {
+        return ProductNameValidator.validate(name, allowKakao);
     }
 
     @Transactional
-    public ProductResponse update(Long id, String name, int price, String imageUrl, Long categoryId) {
-        Category category = categoryRepository.findById(categoryId)
+    public ProductResponse save(ProductRequest request) {
+        Category category = categoryRepository.findById(request.categoryId())
+            .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
+        return ProductResponse.from(productRepository.save(
+            new Product(request.name(), request.price(), request.imageUrl(), category)));
+    }
+
+    @Transactional
+    public ProductResponse update(Long id, ProductRequest request) {
+        Category category = categoryRepository.findById(request.categoryId())
             .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
         Product product = productRepository.findById(id)
             .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NOT_FOUND));
-        product.update(name, price, imageUrl, category);
+        product.update(request.name(), request.price(), request.imageUrl(), category);
         return ProductResponse.from(product);
     }
 

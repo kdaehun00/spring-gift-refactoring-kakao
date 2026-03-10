@@ -1,5 +1,7 @@
 package gift.option;
 
+import gift.global.error.CommonErrorCode;
+import gift.global.error.CommonException;
 import gift.order.OrderErrorCode;
 import gift.order.OrderException;
 import gift.product.Product;
@@ -34,15 +36,23 @@ public class OptionService {
     }
 
     @Transactional
-    public OptionResponse createOption(Long productId, String name, int quantity) {
+    public OptionResponse createOption(Long productId, OptionRequest request) {
+        validateName(request.name());
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NOT_FOUND));
 
-        if (optionRepository.existsByProductIdAndName(productId, name)) {
+        if (optionRepository.existsByProductIdAndName(productId, request.name())) {
             throw new OptionException(OptionErrorCode.DUPLICATE_OPTION_NAME);
         }
 
-        return OptionResponse.from(optionRepository.save(new Option(product, name, quantity)));
+        return OptionResponse.from(optionRepository.save(new Option(product, request.name(), request.quantity())));
+    }
+
+    private void validateName(String name) {
+        List<String> errors = OptionNameValidator.validate(name);
+        if (!errors.isEmpty()) {
+            throw new CommonException(CommonErrorCode.INVALID_REQUEST);
+        }
     }
 
     @Transactional

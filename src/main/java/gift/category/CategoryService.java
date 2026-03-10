@@ -24,15 +24,15 @@ public class CategoryService {
     }
 
     @Transactional
-    public CategoryResponse save(Category category) {
-        return CategoryResponse.from(categoryRepository.save(category));
+    public CategoryResponse save(CategoryRequest request) {
+        return CategoryResponse.from(categoryRepository.save(request.toEntity()));
     }
 
     @Transactional
-    public CategoryResponse update(Long id, String name, String color, String imageUrl, String description) {
+    public CategoryResponse update(Long id, CategoryRequest request) {
         Category category = categoryRepository.findById(id)
             .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
-        category.update(name, color, imageUrl, description);
+        category.update(request.name(), request.color(), request.imageUrl(), request.description());
         return CategoryResponse.from(category);
     }
 
