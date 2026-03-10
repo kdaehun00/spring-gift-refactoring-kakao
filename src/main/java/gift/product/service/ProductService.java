@@ -1,4 +1,4 @@
-package gift.product;
+package gift.product.service;
 
 import gift.category.Category;
 import gift.category.CategoryErrorCode;
@@ -6,6 +6,12 @@ import gift.category.CategoryException;
 import gift.category.CategoryRepository;
 import gift.global.error.CommonErrorCode;
 import gift.global.error.CommonException;
+import gift.product.Product;
+import gift.product.ProductErrorCode;
+import gift.product.ProductException;
+import gift.product.ProductRepository;
+import gift.product.api.ProductRequest;
+import gift.product.api.ProductResponse;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;

@@ -1,5 +1,6 @@
-package gift.product;
+package gift.product.api;
 
+import gift.product.service.ProductService;
 import gift.global.common.ApiResponse;
 import jakarta.validation.Valid;
 import java.net.URI;

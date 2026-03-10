@@ -1,6 +1,8 @@
-package gift.product;
+package gift.product.api;
 
 import gift.category.service.CategoryService;
+import gift.product.Product;
+import gift.product.service.ProductService;
 import java.util.List;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
