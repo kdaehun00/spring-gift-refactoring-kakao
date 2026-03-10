@@ -34,7 +34,7 @@ class MemberAcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.token").isNotEmpty());
+            .andExpect(jsonPath("$.data.token").isNotEmpty());
     }
 
     @Test
@@ -58,7 +58,7 @@ class MemberAcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.token").isNotEmpty());
+            .andExpect(jsonPath("$.data.token").isNotEmpty());
     }
 
     @Test

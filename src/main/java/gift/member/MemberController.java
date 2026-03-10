@@ -2,6 +2,7 @@ package gift.member;
 
 import gift.auth.JwtProvider;
 import gift.auth.TokenResponse;
+import gift.error.ApiResponse;
 import jakarta.validation.Valid;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -28,16 +29,21 @@ public class MemberController {
     }
 
     @PostMapping("/register")
-    public ResponseEntity<TokenResponse> register(@Valid @RequestBody MemberRequest request) {
+    public ResponseEntity<ApiResponse<TokenResponse>> register(
+        @Valid @RequestBody MemberRequest request
+    ) {
         Member member = memberService.register(request.email(), request.password());
         String token = jwtProvider.createToken(member.getEmail());
-        return ResponseEntity.status(HttpStatus.CREATED).body(new TokenResponse(token));
+        return ResponseEntity.status(HttpStatus.CREATED)
+            .body(ApiResponse.ok(new TokenResponse(token)));
     }
 
     @PostMapping("/login")
-    public ResponseEntity<TokenResponse> login(@Valid @RequestBody MemberRequest request) {
+    public ResponseEntity<ApiResponse<TokenResponse>> login(
+        @Valid @RequestBody MemberRequest request
+    ) {
         Member member = memberService.login(request.email(), request.password());
         String token = jwtProvider.createToken(member.getEmail());
-        return ResponseEntity.ok(new TokenResponse(token));
+        return ResponseEntity.ok(ApiResponse.ok(new TokenResponse(token)));
     }
 }

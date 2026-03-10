@@ -1,5 +1,6 @@
 package gift.auth;
 
+import gift.error.ApiResponse;
 import gift.member.Member;
 import gift.member.MemberRepository;
 import org.springframework.http.HttpHeaders;
@@ -54,7 +55,9 @@ public class KakaoAuthController {
     }
 
     @GetMapping(path = "/callback")
-    public ResponseEntity<TokenResponse> callback(@RequestParam("code") String code) {
+    public ResponseEntity<ApiResponse<TokenResponse>> callback(
+        @RequestParam("code") String code
+    ) {
         KakaoLoginClient.KakaoTokenResponse kakaoToken = kakaoLoginClient.requestAccessToken(code);
         KakaoLoginClient.KakaoUserResponse kakaoUser = kakaoLoginClient.requestUserInfo(kakaoToken.accessToken());
         String email = kakaoUser.email();
@@ -65,6 +68,6 @@ public class KakaoAuthController {
         memberRepository.save(member);
 
         String token = jwtProvider.createToken(member.getEmail());
-        return ResponseEntity.ok(new TokenResponse(token));
+        return ResponseEntity.ok(ApiResponse.ok(new TokenResponse(token)));
     }
 }
