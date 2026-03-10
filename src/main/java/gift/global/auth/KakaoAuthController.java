@@ -1,12 +1,9 @@
 package gift.global.auth;
 
 import gift.global.common.ApiResponse;
-import gift.member.Member;
-import gift.member.MemberRepository;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -23,20 +20,14 @@ import org.springframework.web.util.UriComponentsBuilder;
 @RequestMapping(path = "/api/v1/auth/kakao")
 public class KakaoAuthController {
     private final KakaoLoginProperties properties;
-    private final KakaoLoginClient kakaoLoginClient;
-    private final MemberRepository memberRepository;
-    private final JwtProvider jwtProvider;
+    private final KakaoAuthService kakaoAuthService;
 
     public KakaoAuthController(
         KakaoLoginProperties properties,
-        KakaoLoginClient kakaoLoginClient,
-        MemberRepository memberRepository,
-        JwtProvider jwtProvider
+        KakaoAuthService kakaoAuthService
     ) {
         this.properties = properties;
-        this.kakaoLoginClient = kakaoLoginClient;
-        this.memberRepository = memberRepository;
-        this.jwtProvider = jwtProvider;
+        this.kakaoAuthService = kakaoAuthService;
     }
 
     @GetMapping(path = "/login")
@@ -58,16 +49,7 @@ public class KakaoAuthController {
     public ResponseEntity<ApiResponse<TokenResponse>> callback(
         @RequestParam("code") String code
     ) {
-        KakaoLoginClient.KakaoTokenResponse kakaoToken = kakaoLoginClient.requestAccessToken(code);
-        KakaoLoginClient.KakaoUserResponse kakaoUser = kakaoLoginClient.requestUserInfo(kakaoToken.accessToken());
-        String email = kakaoUser.email();
-
-        Member member = memberRepository.findByEmail(email)
-            .orElseGet(() -> new Member(email));
-        member.updateKakaoAccessToken(kakaoToken.accessToken());
-        memberRepository.save(member);
-
-        String token = jwtProvider.createToken(member.getEmail());
+        String token = kakaoAuthService.loginWithKakao(code);
         return ResponseEntity.ok(ApiResponse.success(new TokenResponse(token)));
     }
 }
