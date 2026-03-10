@@ -32,9 +32,7 @@ public class OptionController {
     public ResponseEntity<ApiResponse<List<OptionResponse>>> getOptions(
         @PathVariable Long productId
     ) {
-        List<OptionResponse> responses = optionService.findByProductId(productId).stream()
-            .map(OptionResponse::from)
-            .toList();
+        List<OptionResponse> responses = optionService.findByProductId(productId);
         return ResponseEntity.ok(ApiResponse.success(responses));
     }
 
@@ -45,10 +43,10 @@ public class OptionController {
     ) {
         validateName(request.name());
 
-        Option saved = optionService.createOption(productId, request.name(), request.quantity());
-        URI location = URI.create("/api/v1/products/" + productId + "/options/" + saved.getId());
+        OptionResponse response = optionService.createOption(productId, request.name(), request.quantity());
+        URI location = URI.create("/api/v1/products/" + productId + "/options/" + response.id());
         return ResponseEntity.created(location)
-            .body(ApiResponse.created(OptionResponse.from(saved)));
+            .body(ApiResponse.created(response));
     }
 
     @DeleteMapping(path = "/{optionId}")

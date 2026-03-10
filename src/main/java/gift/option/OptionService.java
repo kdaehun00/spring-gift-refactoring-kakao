@@ -19,10 +19,12 @@ public class OptionService {
     private final ProductRepository productRepository;
 
     @Transactional(readOnly = true)
-    public List<Option> findByProductId(Long productId) {
+    public List<OptionResponse> findByProductId(Long productId) {
         productRepository.findById(productId)
             .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NOT_FOUND));
-        return optionRepository.findByProductId(productId);
+        return optionRepository.findByProductId(productId).stream()
+            .map(OptionResponse::from)
+            .toList();
     }
 
     @Transactional
@@ -32,7 +34,7 @@ public class OptionService {
     }
 
     @Transactional
-    public Option createOption(Long productId, String name, int quantity) {
+    public OptionResponse createOption(Long productId, String name, int quantity) {
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NOT_FOUND));
 
@@ -40,7 +42,7 @@ public class OptionService {
             throw new OptionException(OptionErrorCode.DUPLICATE_OPTION_NAME);
         }
 
-        return optionRepository.save(new Option(product, name, quantity));
+        return OptionResponse.from(optionRepository.save(new Option(product, name, quantity)));
     }
 
     @Transactional
