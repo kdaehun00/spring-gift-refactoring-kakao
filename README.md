@@ -85,6 +85,15 @@
 - [x] refactor(wish): ApiResponse 적용
 - [x] refactor(member): ApiResponse 적용
 
+### Phase 8: 도메인 패키지 구조 분리 (api/ + service/)
+- [x] refactor(category): api/service 패키지 분리
+- [x] refactor(product): api/service 패키지 분리
+- [x] refactor(option): api/service 패키지 분리
+- [x] refactor(order): api/service 패키지 분리
+- [x] refactor(wish): api/service 패키지 분리
+- [x] refactor(member): api/service 패키지 분리
+- [x] refactor(auth): api/service 패키지 분리
+
 ### 스킬 정비
 - [x] chore: 스킬에서 정적 도구가 잡는 불필요한 내용 제거
 - [x] chore: 인라인 템플릿을 별도 파일로 분리
