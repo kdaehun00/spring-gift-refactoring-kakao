@@ -13,6 +13,20 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/admin/products")
 public class AdminProductController {
+    private static final String VIEW_LIST = "product/list";
+    private static final String VIEW_NEW = "product/new";
+    private static final String VIEW_EDIT = "product/edit";
+    private static final String REDIRECT_LIST = "redirect:/admin/products";
+
+    private static final String ATTR_PRODUCTS = "products";
+    private static final String ATTR_PRODUCT = "product";
+    private static final String ATTR_CATEGORIES = "categories";
+    private static final String ATTR_ERRORS = "errors";
+    private static final String ATTR_NAME = "name";
+    private static final String ATTR_PRICE = "price";
+    private static final String ATTR_IMAGE_URL = "imageUrl";
+    private static final String ATTR_CATEGORY_ID = "categoryId";
+
     private final ProductService productService;
     private final CategoryService categoryService;
 
@@ -23,14 +37,14 @@ public class AdminProductController {
 
     @GetMapping
     public String list(Model model) {
-        model.addAttribute("products", productService.findAll());
-        return "product/list";
+        model.addAttribute(ATTR_PRODUCTS, productService.findAll());
+        return VIEW_LIST;
     }
 
     @GetMapping("/new")
     public String newForm(Model model) {
-        model.addAttribute("categories", categoryService.findAll());
-        return "product/new";
+        model.addAttribute(ATTR_CATEGORIES, categoryService.findAll());
+        return VIEW_NEW;
     }
 
     @PostMapping
@@ -41,22 +55,22 @@ public class AdminProductController {
         @RequestParam Long categoryId,
         Model model
     ) {
-        List<String> errors = ProductNameValidator.validate(name, true);
+        List<String> errors = productService.validateProductName(name, true);
         if (!errors.isEmpty()) {
             populateNewForm(model, errors, name, price, imageUrl, categoryId);
-            return "product/new";
+            return VIEW_NEW;
         }
 
-        productService.save(name, price, imageUrl, categoryId);
-        return "redirect:/admin/products";
+        productService.save(new ProductRequest(name, price, imageUrl, categoryId));
+        return REDIRECT_LIST;
     }
 
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
         Product product = productService.findById(id);
-        model.addAttribute("product", product);
-        model.addAttribute("categories", categoryService.findAll());
-        return "product/edit";
+        model.addAttribute(ATTR_PRODUCT, product);
+        model.addAttribute(ATTR_CATEGORIES, categoryService.findAll());
+        return VIEW_EDIT;
     }
 
     @PostMapping("/{id}/edit")
@@ -70,20 +84,20 @@ public class AdminProductController {
     ) {
         Product product = productService.findById(id);
 
-        List<String> errors = ProductNameValidator.validate(name, true);
+        List<String> errors = productService.validateProductName(name, true);
         if (!errors.isEmpty()) {
             populateEditForm(model, product, errors, name, price, imageUrl, categoryId);
-            return "product/edit";
+            return VIEW_EDIT;
         }
 
-        productService.update(id, name, price, imageUrl, categoryId);
-        return "redirect:/admin/products";
+        productService.update(id, new ProductRequest(name, price, imageUrl, categoryId));
+        return REDIRECT_LIST;
     }
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Long id) {
         productService.deleteById(id);
-        return "redirect:/admin/products";
+        return REDIRECT_LIST;
     }
 
     private void populateNewForm(
@@ -94,12 +108,12 @@ public class AdminProductController {
         String imageUrl,
         Long categoryId
     ) {
-        model.addAttribute("errors", errors);
-        model.addAttribute("name", name);
-        model.addAttribute("price", price);
-        model.addAttribute("imageUrl", imageUrl);
-        model.addAttribute("categoryId", categoryId);
-        model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute(ATTR_ERRORS, errors);
+        model.addAttribute(ATTR_NAME, name);
+        model.addAttribute(ATTR_PRICE, price);
+        model.addAttribute(ATTR_IMAGE_URL, imageUrl);
+        model.addAttribute(ATTR_CATEGORY_ID, categoryId);
+        model.addAttribute(ATTR_CATEGORIES, categoryService.findAll());
     }
 
     private void populateEditForm(
@@ -111,12 +125,12 @@ public class AdminProductController {
         String imageUrl,
         Long categoryId
     ) {
-        model.addAttribute("errors", errors);
-        model.addAttribute("product", product);
-        model.addAttribute("name", name);
-        model.addAttribute("price", price);
-        model.addAttribute("imageUrl", imageUrl);
-        model.addAttribute("categoryId", categoryId);
-        model.addAttribute("categories", categoryService.findAll());
+        model.addAttribute(ATTR_ERRORS, errors);
+        model.addAttribute(ATTR_PRODUCT, product);
+        model.addAttribute(ATTR_NAME, name);
+        model.addAttribute(ATTR_PRICE, price);
+        model.addAttribute(ATTR_IMAGE_URL, imageUrl);
+        model.addAttribute(ATTR_CATEGORY_ID, categoryId);
+        model.addAttribute(ATTR_CATEGORIES, categoryService.findAll());
     }
 }

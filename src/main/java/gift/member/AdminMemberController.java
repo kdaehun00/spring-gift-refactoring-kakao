@@ -17,6 +17,16 @@ import org.springframework.web.bind.annotation.RequestParam;
 @Controller
 @RequestMapping("/admin/members")
 public class AdminMemberController {
+    private static final String VIEW_LIST = "member/list";
+    private static final String VIEW_NEW = "member/new";
+    private static final String VIEW_EDIT = "member/edit";
+    private static final String REDIRECT_LIST = "redirect:/admin/members";
+
+    private static final String ATTR_MEMBERS = "members";
+    private static final String ATTR_MEMBER = "member";
+    private static final String ATTR_ERROR = "error";
+    private static final String ATTR_EMAIL = "email";
+
     private final MemberService memberService;
 
     public AdminMemberController(MemberService memberService) {
@@ -25,13 +35,13 @@ public class AdminMemberController {
 
     @GetMapping
     public String list(Model model) {
-        model.addAttribute("members", memberService.findAll());
-        return "member/list";
+        model.addAttribute(ATTR_MEMBERS, memberService.findAll());
+        return VIEW_LIST;
     }
 
     @GetMapping("/new")
     public String newForm() {
-        return "member/new";
+        return VIEW_NEW;
     }
 
     @PostMapping
@@ -42,17 +52,17 @@ public class AdminMemberController {
     ) {
         if (memberService.existsByEmail(email)) {
             populateNewFormError(model, email, "Email is already registered.");
-            return "member/new";
+            return VIEW_NEW;
         }
 
         memberService.register(email, password);
-        return "redirect:/admin/members";
+        return REDIRECT_LIST;
     }
 
     @GetMapping("/{id}/edit")
     public String editForm(@PathVariable Long id, Model model) {
-        model.addAttribute("member", memberService.findById(id));
-        return "member/edit";
+        model.addAttribute(ATTR_MEMBER, memberService.findById(id));
+        return VIEW_EDIT;
     }
 
     @PostMapping("/{id}/edit")
@@ -62,7 +72,7 @@ public class AdminMemberController {
         @RequestParam String password
     ) {
         memberService.update(id, email, password);
-        return "redirect:/admin/members";
+        return REDIRECT_LIST;
     }
 
     @PostMapping("/{id}/charge-point")
@@ -71,17 +81,17 @@ public class AdminMemberController {
         @RequestParam int amount
     ) {
         memberService.chargePoint(id, amount);
-        return "redirect:/admin/members";
+        return REDIRECT_LIST;
     }
 
     @PostMapping("/{id}/delete")
     public String delete(@PathVariable Long id) {
         memberService.deleteById(id);
-        return "redirect:/admin/members";
+        return REDIRECT_LIST;
     }
 
     private void populateNewFormError(Model model, String email, String error) {
-        model.addAttribute("error", error);
-        model.addAttribute("email", email);
+        model.addAttribute(ATTR_ERROR, error);
+        model.addAttribute(ATTR_EMAIL, email);
     }
 }
