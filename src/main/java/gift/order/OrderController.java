@@ -27,8 +27,7 @@ public class OrderController {
     public ResponseEntity<ApiResponse<Page<OrderResponse>>> getOrders(
         @LoginMember Member member, Pageable pageable
     ) {
-        var orders = orderService.findByMemberId(member.getId(), pageable)
-            .map(OrderResponse::from);
+        var orders = orderService.findByMemberId(member.getId(), pageable);
         return ResponseEntity.ok(ApiResponse.success(orders));
     }
 

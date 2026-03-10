@@ -27,8 +27,9 @@ public class OrderService {
     private final MessageClient messageClient;
 
     @Transactional(readOnly = true)
-    public Page<Order> findByMemberId(Long memberId, Pageable pageable) {
-        return orderRepository.findByMemberId(memberId, pageable);
+    public Page<OrderResponse> findByMemberId(Long memberId, Pageable pageable) {
+        return orderRepository.findByMemberId(memberId, pageable)
+            .map(OrderResponse::from);
     }
 
     @Transactional
