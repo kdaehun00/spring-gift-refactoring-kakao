@@ -4,6 +4,7 @@ import gift.global.common.ApiResponse;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -34,7 +35,11 @@ public class CategoryController {
         @Valid @RequestBody CategoryRequest request
     ) {
         CategoryResponse response = categoryService.save(request.toEntity());
-        return ResponseEntity.created(URI.create("/api/v1/categories/" + response.id()))
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+            .path("/{id}")
+            .buildAndExpand(response.id())
+            .toUri();
+        return ResponseEntity.created(location)
             .body(ApiResponse.created(response));
     }
 

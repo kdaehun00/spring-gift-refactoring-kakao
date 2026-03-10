@@ -5,6 +5,7 @@ import gift.global.common.ApiResponse;
 import gift.member.Member;
 import jakarta.validation.Valid;
 import java.net.URI;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -37,7 +38,11 @@ public class OrderController {
         @Valid @RequestBody OrderRequest request
     ) {
         OrderResponse response = orderService.createOrder(member.getId(), request);
-        return ResponseEntity.created(URI.create("/api/v1/orders/" + response.id()))
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+            .path("/{id}")
+            .buildAndExpand(response.id())
+            .toUri();
+        return ResponseEntity.created(location)
             .body(ApiResponse.created(response));
     }
 }

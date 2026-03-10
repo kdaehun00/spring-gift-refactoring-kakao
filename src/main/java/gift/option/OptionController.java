@@ -6,6 +6,7 @@ import gift.global.error.CommonException;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -44,7 +45,10 @@ public class OptionController {
         validateName(request.name());
 
         OptionResponse response = optionService.createOption(productId, request.name(), request.quantity());
-        URI location = URI.create("/api/v1/products/" + productId + "/options/" + response.id());
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+            .path("/{id}")
+            .buildAndExpand(response.id())
+            .toUri();
         return ResponseEntity.created(location)
             .body(ApiResponse.created(response));
     }

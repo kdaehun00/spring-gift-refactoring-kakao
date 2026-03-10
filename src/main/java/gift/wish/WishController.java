@@ -5,6 +5,7 @@ import gift.global.common.ApiResponse;
 import gift.member.Member;
 import jakarta.validation.Valid;
 import java.net.URI;
+import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -43,7 +44,11 @@ public class WishController {
         if (!result.created()) {
             return ResponseEntity.ok(ApiResponse.success(result.response()));
         }
-        return ResponseEntity.created(URI.create("/api/v1/wishes/" + result.response().id()))
+        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
+            .path("/{id}")
+            .buildAndExpand(result.response().id())
+            .toUri();
+        return ResponseEntity.created(location)
             .body(ApiResponse.created(result.response()));
     }
 
