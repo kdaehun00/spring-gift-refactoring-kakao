@@ -1,7 +1,8 @@
-package gift.order;
+package gift.order.api;
 
 import gift.global.auth.LoginMember;
 import gift.global.common.ApiResponse;
+import gift.order.service.OrderService;
 import gift.member.Member;
 import jakarta.validation.Valid;
 import java.net.URI;

@@ -1,5 +1,6 @@
-package gift.order;
+package gift.order.service;
 
+import gift.order.Order;
 import gift.product.Product;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;

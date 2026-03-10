@@ -2,6 +2,7 @@ package gift.order;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.global.auth.JwtProvider;
+import gift.order.api.OrderRequest;
 import gift.option.OptionRepository;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
