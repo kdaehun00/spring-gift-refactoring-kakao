@@ -2,10 +2,12 @@ package gift.global.auth;
 
 import gift.member.Member;
 import gift.member.MemberRepository;
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.util.UriComponentsBuilder;
 
+@RequiredArgsConstructor
 @Service
 public class KakaoAuthService {
     private static final String RESPONSE_TYPE = "response_type";
@@ -18,18 +20,6 @@ public class KakaoAuthService {
     private final KakaoLoginClient kakaoLoginClient;
     private final MemberRepository memberRepository;
     private final JwtProvider jwtProvider;
-
-    public KakaoAuthService(
-        KakaoLoginProperties properties,
-        KakaoLoginClient kakaoLoginClient,
-        MemberRepository memberRepository,
-        JwtProvider jwtProvider
-    ) {
-        this.properties = properties;
-        this.kakaoLoginClient = kakaoLoginClient;
-        this.memberRepository = memberRepository;
-        this.jwtProvider = jwtProvider;
-    }
 
     public String buildAuthorizationUrl() {
         return UriComponentsBuilder.fromUriString(properties.authorizeUrl())
