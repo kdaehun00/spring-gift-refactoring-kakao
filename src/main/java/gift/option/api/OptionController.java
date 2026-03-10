@@ -1,5 +1,6 @@
-package gift.option;
+package gift.option.api;
 
+import gift.option.service.OptionService;
 import gift.global.common.ApiResponse;
 import jakarta.validation.Valid;
 import java.net.URI;

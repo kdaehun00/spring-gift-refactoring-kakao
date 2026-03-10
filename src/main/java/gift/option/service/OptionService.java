@@ -1,7 +1,13 @@
-package gift.option;
+package gift.option.service;
 
 import gift.global.error.CommonErrorCode;
 import gift.global.error.CommonException;
+import gift.option.Option;
+import gift.option.OptionErrorCode;
+import gift.option.OptionException;
+import gift.option.OptionRepository;
+import gift.option.api.OptionRequest;
+import gift.option.api.OptionResponse;
 import gift.order.OrderErrorCode;
 import gift.order.OrderException;
 import gift.product.Product;

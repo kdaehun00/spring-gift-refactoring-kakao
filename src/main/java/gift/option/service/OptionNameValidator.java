@@ -1,4 +1,4 @@
-package gift.option;
+package gift.option.service;
 
 import java.util.ArrayList;
 import java.util.List;

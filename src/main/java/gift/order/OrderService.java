@@ -7,7 +7,7 @@ import gift.member.MemberRepository;
 import gift.member.MemberService;
 import gift.option.Option;
 import gift.option.OptionRepository;
-import gift.option.OptionService;
+import gift.option.service.OptionService;
 import gift.product.Product;
 import gift.wish.WishRepository;
 import gift.wish.WishService;
