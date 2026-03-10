@@ -1,4 +1,6 @@
-package gift.member;
+package gift.member.api;
+
+import gift.member.service.MemberService;
 
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;

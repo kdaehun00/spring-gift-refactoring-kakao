@@ -1,6 +1,8 @@
-package gift.member;
+package gift.member.api;
 
 import gift.global.auth.JwtProvider;
+import gift.member.Member;
+import gift.member.service.MemberService;
 import gift.global.auth.TokenResponse;
 import gift.global.common.ApiResponse;
 import jakarta.validation.Valid;

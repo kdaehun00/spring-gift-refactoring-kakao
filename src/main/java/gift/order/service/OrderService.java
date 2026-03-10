@@ -4,7 +4,7 @@ import gift.global.error.CommonErrorCode;
 import gift.global.error.CommonException;
 import gift.member.Member;
 import gift.member.MemberRepository;
-import gift.member.MemberService;
+import gift.member.service.MemberService;
 import gift.order.Order;
 import gift.order.OrderRepository;
 import gift.order.api.OrderRequest;

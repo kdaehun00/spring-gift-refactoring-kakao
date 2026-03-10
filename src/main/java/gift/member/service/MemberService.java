@@ -1,5 +1,9 @@
-package gift.member;
+package gift.member.service;
 
+import gift.member.Member;
+import gift.member.MemberErrorCode;
+import gift.member.MemberException;
+import gift.member.MemberRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
