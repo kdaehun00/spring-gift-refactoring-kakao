@@ -29,7 +29,7 @@ public class OrderController {
     ) {
         var orders = orderService.findByMemberId(member.getId(), pageable)
             .map(OrderResponse::from);
-        return ResponseEntity.ok(ApiResponse.ok(orders));
+        return ResponseEntity.ok(ApiResponse.success(orders));
     }
 
     @PostMapping
@@ -41,6 +41,6 @@ public class OrderController {
             member.getId(), request.optionId(), request.quantity(), request.message()
         );
         return ResponseEntity.created(URI.create("/api/orders/" + saved.getId()))
-            .body(ApiResponse.ok(OrderResponse.from(saved)));
+            .body(ApiResponse.created(OrderResponse.from(saved)));
     }
 }

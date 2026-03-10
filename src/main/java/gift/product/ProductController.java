@@ -30,13 +30,13 @@ public class ProductController {
     @GetMapping
     public ResponseEntity<ApiResponse<Page<ProductResponse>>> getProducts(Pageable pageable) {
         Page<ProductResponse> products = productService.findAll(pageable).map(ProductResponse::from);
-        return ResponseEntity.ok(ApiResponse.ok(products));
+        return ResponseEntity.ok(ApiResponse.success(products));
     }
 
     @GetMapping("/{id}")
     public ResponseEntity<ApiResponse<ProductResponse>> getProduct(@PathVariable Long id) {
         Product product = productService.findById(id);
-        return ResponseEntity.ok(ApiResponse.ok(ProductResponse.from(product)));
+        return ResponseEntity.ok(ApiResponse.success(ProductResponse.from(product)));
     }
 
     @PostMapping
@@ -48,7 +48,7 @@ public class ProductController {
             request.name(), request.price(), request.imageUrl(), request.categoryId()
         );
         return ResponseEntity.created(URI.create("/api/products/" + saved.getId()))
-            .body(ApiResponse.ok(ProductResponse.from(saved)));
+            .body(ApiResponse.created(ProductResponse.from(saved)));
     }
 
     @PutMapping("/{id}")
@@ -60,13 +60,13 @@ public class ProductController {
         Product saved = productService.update(
             id, request.name(), request.price(), request.imageUrl(), request.categoryId()
         );
-        return ResponseEntity.ok(ApiResponse.ok(ProductResponse.from(saved)));
+        return ResponseEntity.ok(ApiResponse.success(ProductResponse.from(saved)));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteProduct(@PathVariable Long id) {
         productService.deleteById(id);
-        return ResponseEntity.ok(ApiResponse.ok(null));
+        return ResponseEntity.ok(ApiResponse.noContent());
     }
 
     private void validateName(String name) {

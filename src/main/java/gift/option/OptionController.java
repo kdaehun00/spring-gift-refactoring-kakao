@@ -35,7 +35,7 @@ public class OptionController {
         List<OptionResponse> responses = optionService.findByProductId(productId).stream()
             .map(OptionResponse::from)
             .toList();
-        return ResponseEntity.ok(ApiResponse.ok(responses));
+        return ResponseEntity.ok(ApiResponse.success(responses));
     }
 
     @PostMapping
@@ -48,7 +48,7 @@ public class OptionController {
         Option saved = optionService.createOption(productId, request.name(), request.quantity());
         URI location = URI.create("/api/products/" + productId + "/options/" + saved.getId());
         return ResponseEntity.created(location)
-            .body(ApiResponse.ok(OptionResponse.from(saved)));
+            .body(ApiResponse.created(OptionResponse.from(saved)));
     }
 
     @DeleteMapping(path = "/{optionId}")
@@ -57,7 +57,7 @@ public class OptionController {
         @PathVariable Long optionId
     ) {
         optionService.deleteOption(productId, optionId);
-        return ResponseEntity.ok(ApiResponse.ok(null));
+        return ResponseEntity.ok(ApiResponse.noContent());
     }
 
     private void validateName(String name) {

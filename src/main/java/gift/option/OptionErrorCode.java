@@ -1,8 +1,10 @@
 package gift.option;
 
 import gift.global.error.ErrorCode;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+@Getter
 public enum OptionErrorCode implements ErrorCode {
     OPTION_NOT_FOUND("OPTION_NOT_FOUND", "옵션을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     DUPLICATE_OPTION_NAME(
@@ -17,25 +19,9 @@ public enum OptionErrorCode implements ErrorCode {
     private final String code;
     private final String message;
     private final HttpStatus httpStatus;
-
     OptionErrorCode(final String code, final String message, final HttpStatus httpStatus) {
         this.code = code;
         this.message = message;
         this.httpStatus = httpStatus;
-    }
-
-    @Override
-    public String getCode() {
-        return code;
-    }
-
-    @Override
-    public String getMessage() {
-        return message;
-    }
-
-    @Override
-    public HttpStatus getHttpStatus() {
-        return httpStatus;
     }
 }

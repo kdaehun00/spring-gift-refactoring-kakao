@@ -89,7 +89,7 @@ class CategoryAcceptanceTest {
 
         mockMvc.perform(delete("/api/categories/{id}", createdId))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.code").value("SUCCESS"));
+            .andExpect(jsonPath("$.code").value("NO_CONTENT"));
     }
 
     @Test

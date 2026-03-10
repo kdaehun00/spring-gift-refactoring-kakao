@@ -63,7 +63,7 @@ class OptionAcceptanceTest {
         // productId=1에는 옵션 2개 존재 (optionId=1, 2)
         mockMvc.perform(delete("/api/products/{productId}/options/{optionId}", 1L, 1L))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.code").value("SUCCESS"));
+            .andExpect(jsonPath("$.code").value("NO_CONTENT"));
     }
 
     @Test

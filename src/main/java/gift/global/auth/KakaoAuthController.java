@@ -68,6 +68,6 @@ public class KakaoAuthController {
         memberRepository.save(member);
 
         String token = jwtProvider.createToken(member.getEmail());
-        return ResponseEntity.ok(ApiResponse.ok(new TokenResponse(token)));
+        return ResponseEntity.ok(ApiResponse.success(new TokenResponse(token)));
     }
 }

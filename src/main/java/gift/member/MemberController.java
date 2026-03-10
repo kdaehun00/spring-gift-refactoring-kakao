@@ -35,7 +35,7 @@ public class MemberController {
         Member member = memberService.register(request.email(), request.password());
         String token = jwtProvider.createToken(member.getEmail());
         return ResponseEntity.status(HttpStatus.CREATED)
-            .body(ApiResponse.ok(new TokenResponse(token)));
+            .body(ApiResponse.created(new TokenResponse(token)));
     }
 
     @PostMapping("/login")
@@ -44,6 +44,6 @@ public class MemberController {
     ) {
         Member member = memberService.login(request.email(), request.password());
         String token = jwtProvider.createToken(member.getEmail());
-        return ResponseEntity.ok(ApiResponse.ok(new TokenResponse(token)));
+        return ResponseEntity.ok(ApiResponse.success(new TokenResponse(token)));
     }
 }

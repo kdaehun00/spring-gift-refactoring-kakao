@@ -28,7 +28,7 @@ public class CategoryController {
         List<CategoryResponse> categories = categoryService.findAll().stream()
             .map(CategoryResponse::from)
             .toList();
-        return ResponseEntity.ok(ApiResponse.ok(categories));
+        return ResponseEntity.ok(ApiResponse.success(categories));
     }
 
     @PostMapping
@@ -37,7 +37,7 @@ public class CategoryController {
     ) {
         Category saved = categoryService.save(request.toEntity());
         return ResponseEntity.created(URI.create("/api/categories/" + saved.getId()))
-            .body(ApiResponse.ok(CategoryResponse.from(saved)));
+            .body(ApiResponse.created(CategoryResponse.from(saved)));
     }
 
     @PutMapping("/{id}")
@@ -48,12 +48,12 @@ public class CategoryController {
         Category category = categoryService.update(
             id, request.name(), request.color(), request.imageUrl(), request.description()
         );
-        return ResponseEntity.ok(ApiResponse.ok(CategoryResponse.from(category)));
+        return ResponseEntity.ok(ApiResponse.success(CategoryResponse.from(category)));
     }
 
     @DeleteMapping("/{id}")
     public ResponseEntity<ApiResponse<Void>> deleteCategory(@PathVariable Long id) {
         categoryService.deleteById(id);
-        return ResponseEntity.ok(ApiResponse.ok(null));
+        return ResponseEntity.ok(ApiResponse.noContent());
     }
 }

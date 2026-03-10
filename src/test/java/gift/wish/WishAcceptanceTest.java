@@ -99,7 +99,7 @@ class WishAcceptanceTest {
         mockMvc.perform(delete("/api/wishes/{id}", 1L)
                 .header("Authorization", "Bearer " + token))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.code").value("SUCCESS"));
+            .andExpect(jsonPath("$.code").value("NO_CONTENT"));
     }
 
     @Test

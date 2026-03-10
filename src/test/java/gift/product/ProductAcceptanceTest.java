@@ -95,7 +95,7 @@ class ProductAcceptanceTest {
 
         mockMvc.perform(delete("/api/products/{id}", createdId))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.code").value("SUCCESS"));
+            .andExpect(jsonPath("$.code").value("NO_CONTENT"));
     }
 
     @Test
