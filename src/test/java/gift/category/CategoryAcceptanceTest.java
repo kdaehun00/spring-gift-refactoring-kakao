@@ -1,6 +1,7 @@
 package gift.category;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gift.category.api.CategoryRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

@@ -1,4 +1,6 @@
-package gift.category;
+package gift.category.api;
+
+import gift.category.Category;
 
 import jakarta.validation.constraints.NotBlank;
 

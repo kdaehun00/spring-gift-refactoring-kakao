@@ -1,5 +1,6 @@
-package gift.category;
+package gift.category.api;
 
+import gift.category.service.CategoryService;
 import gift.global.common.ApiResponse;
 import jakarta.validation.Valid;
 import java.net.URI;

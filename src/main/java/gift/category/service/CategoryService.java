@@ -1,5 +1,11 @@
-package gift.category;
+package gift.category.service;
 
+import gift.category.Category;
+import gift.category.CategoryErrorCode;
+import gift.category.CategoryException;
+import gift.category.CategoryRepository;
+import gift.category.api.CategoryRequest;
+import gift.category.api.CategoryResponse;
 import java.util.List;
 
 import lombok.RequiredArgsConstructor;
