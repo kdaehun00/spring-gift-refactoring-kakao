@@ -4,36 +4,27 @@ import gift.global.error.CommonErrorCode;
 import gift.global.error.CommonException;
 import gift.member.Member;
 import gift.member.MemberRepository;
+import gift.member.MemberService;
 import gift.option.Option;
 import gift.option.OptionRepository;
+import gift.option.OptionService;
 import gift.product.Product;
 import gift.wish.WishRepository;
+import gift.wish.WishService;
+import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@RequiredArgsConstructor
 @Service
 public class OrderService {
     private final OrderRepository orderRepository;
-    private final OptionRepository optionRepository;
-    private final MemberRepository memberRepository;
-    private final WishRepository wishRepository;
+    private final MemberService memberService;
+    private final OptionService optionService;
+    private final WishService wishService;
     private final MessageClient messageClient;
-
-    public OrderService(
-        OrderRepository orderRepository,
-        OptionRepository optionRepository,
-        MemberRepository memberRepository,
-        WishRepository wishRepository,
-        MessageClient messageClient
-    ) {
-        this.orderRepository = orderRepository;
-        this.optionRepository = optionRepository;
-        this.memberRepository = memberRepository;
-        this.wishRepository = wishRepository;
-        this.messageClient = messageClient;
-    }
 
     @Transactional(readOnly = true)
     public Page<Order> findByMemberId(Long memberId, Pageable pageable) {
@@ -41,25 +32,21 @@ public class OrderService {
     }
 
     @Transactional
-    public Order createOrder(Long memberId, Long optionId, int quantity, String message) {
-        Member member = memberRepository.findById(memberId)
-            .orElseThrow(() -> new CommonException(CommonErrorCode.UNAUTHORIZED));
+    public OrderResponse createOrder(Long memberId, OrderRequest request) {
+        Member member = memberService.findById(memberId);
+        Option option = optionService.getOptionForUpdate(request.optionId());
 
-        Option option = optionRepository.findByIdForUpdate(optionId)
-            .orElseThrow(() -> new OrderException(OrderErrorCode.OPTION_NOT_FOUND));
+        option.subtractQuantity(request.quantity());
 
-        option.subtractQuantity(quantity);
-
-        Order order = new Order(option, memberId, quantity, message);
+        Order order = Order.create(option, memberId, request.quantity(), request.message());
         member.deductPoint(order.getTotalPrice());
 
         Order saved = orderRepository.save(order);
 
-        wishRepository.findByMemberIdAndProductId(memberId, option.getProduct().getId())
-            .ifPresent(wishRepository::delete);
+        wishService.findByMemberIdAndProductId(memberId, request.optionId());
 
         sendMessageIfPossible(member, saved, option);
-        return saved;
+        return OrderResponse.from(saved);
     }
 
     private void sendMessageIfPossible(Member member, Order order, Option option) {

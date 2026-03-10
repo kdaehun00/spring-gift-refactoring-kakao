@@ -39,6 +39,10 @@ public class Order {
         this.orderDateTime = LocalDateTime.now();
     }
 
+    public static Order create(Option option, Long memberId, int quantity, String message) {
+        return new Order(option, memberId, quantity, message);
+    }
+
     public Long getId() {
         return id;
     }

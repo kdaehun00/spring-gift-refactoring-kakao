@@ -1,28 +1,34 @@
 package gift.option;
 
+import gift.order.OrderErrorCode;
+import gift.order.OrderException;
 import gift.product.Product;
 import gift.product.ProductErrorCode;
 import gift.product.ProductException;
 import gift.product.ProductRepository;
 import java.util.List;
+
+import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@RequiredArgsConstructor
 @Service
 public class OptionService {
     private final OptionRepository optionRepository;
     private final ProductRepository productRepository;
-
-    public OptionService(OptionRepository optionRepository, ProductRepository productRepository) {
-        this.optionRepository = optionRepository;
-        this.productRepository = productRepository;
-    }
 
     @Transactional(readOnly = true)
     public List<Option> findByProductId(Long productId) {
         productRepository.findById(productId)
             .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NOT_FOUND));
         return optionRepository.findByProductId(productId);
+    }
+
+    @Transactional
+    public Option getOptionForUpdate(Long optionId) {
+        return optionRepository.findByIdForUpdate(optionId)
+                .orElseThrow(() -> new OrderException(OrderErrorCode.OPTION_NOT_FOUND));
     }
 
     @Transactional

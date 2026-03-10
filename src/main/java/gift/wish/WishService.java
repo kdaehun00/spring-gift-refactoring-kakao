@@ -45,4 +45,10 @@ public class WishService {
         }
         wishRepository.delete(wish);
     }
+
+    @Transactional(readOnly = true)
+    public void findByMemberIdAndProductId(Long memberId, Long optionId) {
+        wishRepository.findByMemberIdAndProductId(memberId, optionId)
+                .ifPresent(wishRepository::delete);
+    }
 }

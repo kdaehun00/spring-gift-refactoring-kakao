@@ -37,10 +37,8 @@ public class OrderController {
         @LoginMember Member member,
         @Valid @RequestBody OrderRequest request
     ) {
-        var saved = orderService.createOrder(
-            member.getId(), request.optionId(), request.quantity(), request.message()
-        );
-        return ResponseEntity.created(URI.create("/api/v1/orders/" + saved.getId()))
-            .body(ApiResponse.created(OrderResponse.from(saved)));
+        OrderResponse response = orderService.createOrder(member.getId(), request);
+        return ResponseEntity.created(URI.create("/api/v1/orders/" + response.id()))
+            .body(ApiResponse.created(response));
     }
 }
