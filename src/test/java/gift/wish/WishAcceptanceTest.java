@@ -46,8 +46,8 @@ class WishAcceptanceTest {
                 .param("page", "0")
                 .param("size", "10"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.content").isArray())
-            .andExpect(jsonPath("$.content.length()").value(2));
+            .andExpect(jsonPath("$.data.content").isArray())
+            .andExpect(jsonPath("$.data.content.length()").value(2));
     }
 
     @Test
@@ -73,7 +73,7 @@ class WishAcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.productId").value(5));
+            .andExpect(jsonPath("$.data.productId").value(5));
     }
 
     @Test
@@ -88,7 +88,7 @@ class WishAcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.productId").value(1));
+            .andExpect(jsonPath("$.data.productId").value(1));
     }
 
     @Test
@@ -98,7 +98,8 @@ class WishAcceptanceTest {
         // wishId=1은 user1(memberId=2)의 위시
         mockMvc.perform(delete("/api/wishes/{id}", 1L)
                 .header("Authorization", "Bearer " + token))
-            .andExpect(status().isNoContent());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.code").value("SUCCESS"));
     }
 
     @Test

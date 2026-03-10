@@ -1,6 +1,7 @@
 package gift.wish;
 
 import gift.auth.LoginMember;
+import gift.error.ApiResponse;
 import gift.member.Member;
 import jakarta.validation.Valid;
 import java.net.URI;
@@ -25,30 +26,32 @@ public class WishController {
     }
 
     @GetMapping
-    public ResponseEntity<Page<WishResponse>> getWishes(
+    public ResponseEntity<ApiResponse<Page<WishResponse>>> getWishes(
         @LoginMember Member member,
         Pageable pageable
     ) {
         var wishes = wishService.findByMemberId(member.getId(), pageable).map(WishResponse::from);
-        return ResponseEntity.ok(wishes);
+        return ResponseEntity.ok(ApiResponse.ok(wishes));
     }
 
     @PostMapping
-    public ResponseEntity<WishResponse> addWish(
+    public ResponseEntity<ApiResponse<WishResponse>> addWish(
         @LoginMember Member member,
         @Valid @RequestBody WishRequest request
     ) {
         var result = wishService.addWish(member.getId(), request.productId());
         if (!result.created()) {
-            return ResponseEntity.ok(WishResponse.from(result.wish()));
+            return ResponseEntity.ok(ApiResponse.ok(WishResponse.from(result.wish())));
         }
         return ResponseEntity.created(URI.create("/api/wishes/" + result.wish().getId()))
-            .body(WishResponse.from(result.wish()));
+            .body(ApiResponse.ok(WishResponse.from(result.wish())));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> removeWish(@LoginMember Member member, @PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> removeWish(
+        @LoginMember Member member, @PathVariable Long id
+    ) {
         wishService.deleteByIdAndMemberId(id, member.getId());
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.ok(null));
     }
 }

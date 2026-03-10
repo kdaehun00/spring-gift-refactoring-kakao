@@ -107,7 +107,7 @@ class OrderAcceptanceTest {
                 .param("page", "0")
                 .param("size", "10"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.content.length()").value(2));
+            .andExpect(jsonPath("$.data.content.length()").value(2));
 
         // 주문 생성
         mockMvc.perform(post("/api/orders")
@@ -122,7 +122,7 @@ class OrderAcceptanceTest {
                 .param("page", "0")
                 .param("size", "10"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.content.length()").value(1));
+            .andExpect(jsonPath("$.data.content.length()").value(1));
     }
 
     @Test
