@@ -77,13 +77,13 @@
 - [x] test(order): 동시 주문 시 재고 정합성 검증 테스트
 
 ### Phase 7: ApiResponse 통합 응답 wrapper 도입
-- [ ] refactor(error): ApiResponse 통합 응답 wrapper 추가
-- [ ] refactor(product): ApiResponse 적용
-- [ ] refactor(category): ApiResponse 적용
-- [ ] refactor(option): ApiResponse 적용
-- [ ] refactor(order): ApiResponse 적용
-- [ ] refactor(wish): ApiResponse 적용
-- [ ] refactor(member): ApiResponse 적용
+- [x] refactor(error): ApiResponse 통합 응답 wrapper 추가
+- [x] refactor(product): ApiResponse 적용
+- [x] refactor(category): ApiResponse 적용
+- [x] refactor(option): ApiResponse 적용
+- [x] refactor(order): ApiResponse 적용
+- [x] refactor(wish): ApiResponse 적용
+- [x] refactor(member): ApiResponse 적용
 
 ### 스킬 정비
 - [x] chore: 스킬에서 정적 도구가 잡는 불필요한 내용 제거
