@@ -1,9 +1,14 @@
-package gift.wish;
+package gift.wish.service;
 
 import gift.global.error.CommonErrorCode;
 import gift.global.error.CommonException;
 import gift.product.Product;
 import gift.product.ProductRepository;
+import gift.wish.Wish;
+import gift.wish.WishErrorCode;
+import gift.wish.WishException;
+import gift.wish.WishRepository;
+import gift.wish.api.WishResponse;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;

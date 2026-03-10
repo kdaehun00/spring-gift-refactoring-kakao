@@ -2,6 +2,7 @@ package gift.wish;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
 import gift.global.auth.JwtProvider;
+import gift.wish.api.WishRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;

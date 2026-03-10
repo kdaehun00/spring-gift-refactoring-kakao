@@ -1,7 +1,9 @@
-package gift.wish;
+package gift.wish.api;
 
 import gift.global.auth.LoginMember;
 import gift.global.common.ApiResponse;
+import gift.wish.service.WishAddResult;
+import gift.wish.service.WishService;
 import gift.member.Member;
 import jakarta.validation.Valid;
 import java.net.URI;

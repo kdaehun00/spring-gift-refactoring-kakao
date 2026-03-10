@@ -14,7 +14,7 @@ import gift.option.OptionRepository;
 import gift.option.service.OptionService;
 import gift.product.Product;
 import gift.wish.WishRepository;
-import gift.wish.WishService;
+import gift.wish.service.WishService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
