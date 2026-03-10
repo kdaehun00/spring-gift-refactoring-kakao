@@ -33,8 +33,8 @@ class CategoryAcceptanceTest {
     void getCategories() throws Exception {
         mockMvc.perform(get("/api/categories"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$").isArray())
-            .andExpect(jsonPath("$.length()").value(3));
+            .andExpect(jsonPath("$.data").isArray())
+            .andExpect(jsonPath("$.data.length()").value(3));
     }
 
     @Test
@@ -46,8 +46,8 @@ class CategoryAcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.name").value("도서"))
-            .andExpect(jsonPath("$.color").value("#8B4513"));
+            .andExpect(jsonPath("$.data.name").value("도서"))
+            .andExpect(jsonPath("$.data.color").value("#8B4513"));
     }
 
     @Test
@@ -59,7 +59,7 @@ class CategoryAcceptanceTest {
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.name").value("가전제품"));
+            .andExpect(jsonPath("$.data.name").value("가전제품"));
     }
 
     @Test
@@ -85,10 +85,11 @@ class CategoryAcceptanceTest {
                 .content(objectMapper.writeValueAsString(request)))
             .andReturn().getResponse().getContentAsString();
 
-        Long createdId = objectMapper.readTree(response).get("id").asLong();
+        Long createdId = objectMapper.readTree(response).get("data").get("id").asLong();
 
         mockMvc.perform(delete("/api/categories/{id}", createdId))
-            .andExpect(status().isNoContent());
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.code").value("SUCCESS"));
     }
 
     @Test

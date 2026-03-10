@@ -1,5 +1,6 @@
 package gift.category;
 
+import gift.error.ApiResponse;
 import jakarta.validation.Valid;
 import java.net.URI;
 import java.util.List;
@@ -23,34 +24,36 @@ public class CategoryController {
     }
 
     @GetMapping
-    public ResponseEntity<List<CategoryResponse>> getCategories() {
+    public ResponseEntity<ApiResponse<List<CategoryResponse>>> getCategories() {
         List<CategoryResponse> categories = categoryService.findAll().stream()
             .map(CategoryResponse::from)
             .toList();
-        return ResponseEntity.ok(categories);
+        return ResponseEntity.ok(ApiResponse.ok(categories));
     }
 
     @PostMapping
-    public ResponseEntity<CategoryResponse> createCategory(@Valid @RequestBody CategoryRequest request) {
+    public ResponseEntity<ApiResponse<CategoryResponse>> createCategory(
+        @Valid @RequestBody CategoryRequest request
+    ) {
         Category saved = categoryService.save(request.toEntity());
         return ResponseEntity.created(URI.create("/api/categories/" + saved.getId()))
-            .body(CategoryResponse.from(saved));
+            .body(ApiResponse.ok(CategoryResponse.from(saved)));
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<CategoryResponse> updateCategory(
+    public ResponseEntity<ApiResponse<CategoryResponse>> updateCategory(
         @PathVariable Long id,
         @Valid @RequestBody CategoryRequest request
     ) {
         Category category = categoryService.update(
             id, request.name(), request.color(), request.imageUrl(), request.description()
         );
-        return ResponseEntity.ok(CategoryResponse.from(category));
+        return ResponseEntity.ok(ApiResponse.ok(CategoryResponse.from(category)));
     }
 
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteCategory(@PathVariable Long id) {
+    public ResponseEntity<ApiResponse<Void>> deleteCategory(@PathVariable Long id) {
         categoryService.deleteById(id);
-        return ResponseEntity.noContent().build();
+        return ResponseEntity.ok(ApiResponse.ok(null));
     }
 }
