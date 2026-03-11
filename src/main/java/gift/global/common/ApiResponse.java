@@ -4,8 +4,8 @@ import gift.global.error.ErrorCode;
 
 public record ApiResponse<T>(String code, String message, T data) {
     // 성공 응답 (200 OK, 데이터 있음)
-    public static <T> ApiResponse<T> success(T data) {
-        return new ApiResponse<>(SuccessCode.SUCCESS.getCode(),SuccessCode.SUCCESS.getMessage(), data);
+    public static <T> ApiResponse<T> ok(T data) {
+        return new ApiResponse<>(SuccessCode.OK.getCode(),SuccessCode.OK.getMessage(), data);
     }
 
     // 성공 응답 (201 Created, 데이터 있음)

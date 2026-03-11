@@ -33,7 +33,7 @@ public class OptionController {
         @PathVariable Long productId
     ) {
         List<OptionResponse> responses = optionService.findByProductId(productId);
-        return ResponseEntity.ok(ApiResponse.success(responses));
+        return ResponseEntity.ok(ApiResponse.ok(responses));
     }
 
     @PostMapping

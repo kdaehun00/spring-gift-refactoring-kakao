@@ -39,6 +39,6 @@ public class KakaoAuthController {
         @RequestParam("code") String code
     ) {
         String token = kakaoAuthService.loginWithKakao(code);
-        return ResponseEntity.ok(ApiResponse.success(new TokenResponse(token)));
+        return ResponseEntity.ok(ApiResponse.ok(new TokenResponse(token)));
     }
 }

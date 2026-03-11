@@ -30,7 +30,7 @@ public class OrderController {
         @LoginMember Member member, Pageable pageable
     ) {
         Page<OrderResponse> response = orderService.findByMemberId(member.getId(), pageable);
-        return ResponseEntity.ok(ApiResponse.success(response));
+        return ResponseEntity.ok(ApiResponse.ok(response));
     }
 
     @PostMapping

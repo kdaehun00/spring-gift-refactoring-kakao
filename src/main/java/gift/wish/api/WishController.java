@@ -34,7 +34,7 @@ public class WishController {
         Pageable pageable
     ) {
         var wishes = wishService.findByMemberId(member.getId(), pageable);
-        return ResponseEntity.ok(ApiResponse.success(wishes));
+        return ResponseEntity.ok(ApiResponse.ok(wishes));
     }
 
     @PostMapping
@@ -44,7 +44,7 @@ public class WishController {
     ) {
         var result = wishService.addWish(member.getId(), request.productId());
         if (!result.created()) {
-            return ResponseEntity.ok(ApiResponse.success(result.response()));
+            return ResponseEntity.ok(ApiResponse.ok(result.response()));
         }
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
             .path("/{id}")

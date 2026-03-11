@@ -28,7 +28,7 @@ public class CategoryController {
     @GetMapping
     public ResponseEntity<ApiResponse<List<CategoryResponse>>> getCategories() {
         List<CategoryResponse> categories = categoryService.findAllResponses();
-        return ResponseEntity.ok(ApiResponse.success(categories));
+        return ResponseEntity.ok(ApiResponse.ok(categories));
     }
 
     @PostMapping
@@ -50,7 +50,7 @@ public class CategoryController {
         @Valid @RequestBody CategoryRequest request
     ) {
         CategoryResponse response = categoryService.update(id, request);
-        return ResponseEntity.ok(ApiResponse.success(response));
+        return ResponseEntity.ok(ApiResponse.ok(response));
     }
 
     @DeleteMapping("/{id}")
