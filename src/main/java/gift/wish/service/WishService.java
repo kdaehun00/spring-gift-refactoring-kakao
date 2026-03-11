@@ -27,15 +27,15 @@ public class WishService {
     }
 
     @Transactional
-    public WishAddResult addWish(Long memberId, Long productId) {
+    public WishResponse addWish(Long memberId, Long productId) {
         var existing = wishRepository.findByMemberIdAndProductId(memberId, productId);
         if (existing.isPresent()) {
-            return new WishAddResult(WishResponse.from(existing.get()), false);
+            return WishResponse.from(existing.get());
         }
         Product product = productRepository.findById(productId)
             .orElseThrow(() -> new WishException(WishErrorCode.PRODUCT_NOT_FOUND));
         Wish saved = wishRepository.save(new Wish(memberId, product));
-        return new WishAddResult(WishResponse.from(saved), true);
+        return WishResponse.from(saved);
     }
 
     @Transactional

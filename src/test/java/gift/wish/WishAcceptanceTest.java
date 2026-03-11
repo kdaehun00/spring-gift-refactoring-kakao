@@ -73,7 +73,7 @@ class WishAcceptanceTest {
                 .header("Authorization", "Bearer " + token)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
-            .andExpect(status().isCreated())
+            .andExpect(status().isOk())
             .andExpect(jsonPath("$.data.productId").value(5));
     }
 

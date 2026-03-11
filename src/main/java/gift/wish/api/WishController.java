@@ -2,12 +2,9 @@ package gift.wish.api;
 
 import gift.global.auth.LoginMember;
 import gift.global.common.ApiResponse;
-import gift.wish.service.WishAddResult;
 import gift.wish.service.WishService;
 import gift.member.Member;
 import jakarta.validation.Valid;
-import java.net.URI;
-import org.springframework.web.servlet.support.ServletUriComponentsBuilder;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
@@ -33,7 +30,7 @@ public class WishController {
         @LoginMember Member member,
         Pageable pageable
     ) {
-        var wishes = wishService.findByMemberId(member.getId(), pageable);
+        Page<WishResponse> wishes = wishService.findByMemberId(member.getId(), pageable);
         return ResponseEntity.ok(ApiResponse.ok(wishes));
     }
 
@@ -42,16 +39,8 @@ public class WishController {
         @LoginMember Member member,
         @Valid @RequestBody WishRequest request
     ) {
-        var result = wishService.addWish(member.getId(), request.productId());
-        if (!result.created()) {
-            return ResponseEntity.ok(ApiResponse.ok(result.response()));
-        }
-        URI location = ServletUriComponentsBuilder.fromCurrentRequest()
-            .path("/{id}")
-            .buildAndExpand(result.response().id())
-            .toUri();
-        return ResponseEntity.created(location)
-            .body(ApiResponse.created(result.response()));
+        WishResponse response = wishService.addWish(member.getId(), request.productId());
+        return ResponseEntity.ok(ApiResponse.ok(response));
     }
 
     @DeleteMapping("/{id}")
