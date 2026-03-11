@@ -1,6 +1,7 @@
 package gift.member;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gift.member.api.MemberRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -30,11 +31,11 @@ class MemberAcceptanceTest {
     void register() throws Exception {
         var request = new MemberRequest("newuser@example.com", "password123");
 
-        mockMvc.perform(post("/api/members/register")
+        mockMvc.perform(post("/api/v1/members/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.token").isNotEmpty());
+            .andExpect(jsonPath("$.data.token").isNotEmpty());
     }
 
     @Test
@@ -42,7 +43,7 @@ class MemberAcceptanceTest {
     void register_DuplicateEmail() throws Exception {
         var request = new MemberRequest("admin@example.com", "password123");
 
-        mockMvc.perform(post("/api/members/register")
+        mockMvc.perform(post("/api/v1/members/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isConflict())
@@ -54,11 +55,11 @@ class MemberAcceptanceTest {
     void login() throws Exception {
         var request = new MemberRequest("admin@example.com", "admin1234");
 
-        mockMvc.perform(post("/api/members/login")
+        mockMvc.perform(post("/api/v1/members/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.token").isNotEmpty());
+            .andExpect(jsonPath("$.data.token").isNotEmpty());
     }
 
     @Test
@@ -66,7 +67,7 @@ class MemberAcceptanceTest {
     void login_WrongPassword() throws Exception {
         var request = new MemberRequest("admin@example.com", "wrongpassword");
 
-        mockMvc.perform(post("/api/members/login")
+        mockMvc.perform(post("/api/v1/members/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
@@ -78,7 +79,7 @@ class MemberAcceptanceTest {
     void login_NotFound() throws Exception {
         var request = new MemberRequest("unknown@example.com", "password123");
 
-        mockMvc.perform(post("/api/members/login")
+        mockMvc.perform(post("/api/v1/members/login")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
@@ -90,7 +91,7 @@ class MemberAcceptanceTest {
     void register_InvalidRequest() throws Exception {
         var request = new MemberRequest("", "password123");
 
-        mockMvc.perform(post("/api/members/register")
+        mockMvc.perform(post("/api/v1/members/register")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())

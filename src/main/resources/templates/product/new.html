@@ -17,15 +17,15 @@
     <form th:action="@{/admin/products}" method="post">
         <div class="mb-3">
             <label for="name" class="form-label">상품명</label>
-            <input type="text" class="form-control" id="name" name="name" th:value="${name}" maxlength="15" required>
+            <input type="text" class="form-control" id="name" name="name" th:value="${productRequest?.name}" maxlength="15" required>
         </div>
         <div class="mb-3">
             <label for="price" class="form-label">가격</label>
-            <input type="number" class="form-control" id="price" name="price" th:value="${price}" min="1" required>
+            <input type="number" class="form-control" id="price" name="price" th:value="${productRequest?.price}" min="1" required>
         </div>
         <div class="mb-3">
             <label for="imageUrl" class="form-label">이미지 URL</label>
-            <input type="text" class="form-control" id="imageUrl" name="imageUrl" th:value="${imageUrl}" required>
+            <input type="text" class="form-control" id="imageUrl" name="imageUrl" th:value="${productRequest?.imageUrl}" required>
         </div>
         <div class="mb-3">
             <label for="categoryId" class="form-label">카테고리</label>
@@ -34,7 +34,7 @@
                 <option th:each="category : ${categories}"
                         th:value="${category.id}"
                         th:text="${category.name}"
-                        th:selected="${categoryId != null && categoryId == category.id}">
+                        th:selected="${productRequest != null && productRequest.categoryId == category.id}">
                 </option>
             </select>
         </div>

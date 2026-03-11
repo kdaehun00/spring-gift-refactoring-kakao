@@ -1,7 +1,8 @@
 package gift.order;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
-import gift.auth.JwtProvider;
+import gift.global.auth.JwtProvider;
+import gift.order.api.OrderRequest;
 import gift.option.OptionRepository;
 import java.util.concurrent.CountDownLatch;
 import java.util.concurrent.ExecutorService;
@@ -57,7 +58,7 @@ class OrderConcurrencyTest {
                 try {
                     ready.countDown();
                     start.await();
-                    var result = mockMvc.perform(post("/api/orders")
+                    var result = mockMvc.perform(post("/api/v1/orders")
                             .header("Authorization", "Bearer " + token)
                             .contentType(MediaType.APPLICATION_JSON)
                             .content(body))

@@ -1,6 +1,6 @@
 package gift.option;
 
-import gift.error.BusinessException;
+import gift.global.error.BusinessException;
 
 public class OptionException extends BusinessException {
     public OptionException(final OptionErrorCode errorCode) {

@@ -1,8 +1,10 @@
 package gift.member;
 
-import gift.error.ErrorCode;
+import gift.global.error.ErrorCode;
+import lombok.Getter;
 import org.springframework.http.HttpStatus;
 
+@Getter
 public enum MemberErrorCode implements ErrorCode {
     MEMBER_NOT_FOUND("MEMBER_NOT_FOUND", "회원을 찾을 수 없습니다.", HttpStatus.NOT_FOUND),
     EMAIL_ALREADY_REGISTERED(
@@ -16,25 +18,9 @@ public enum MemberErrorCode implements ErrorCode {
     private final String code;
     private final String message;
     private final HttpStatus httpStatus;
-
     MemberErrorCode(final String code, final String message, final HttpStatus httpStatus) {
         this.code = code;
         this.message = message;
         this.httpStatus = httpStatus;
-    }
-
-    @Override
-    public String getCode() {
-        return code;
-    }
-
-    @Override
-    public String getMessage() {
-        return message;
-    }
-
-    @Override
-    public HttpStatus getHttpStatus() {
-        return httpStatus;
     }
 }

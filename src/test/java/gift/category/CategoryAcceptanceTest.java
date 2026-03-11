@@ -1,6 +1,7 @@
 package gift.category;
 
 import com.fasterxml.jackson.databind.ObjectMapper;
+import gift.category.api.CategoryRequest;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -31,10 +32,10 @@ class CategoryAcceptanceTest {
     @Test
     @DisplayName("카테고리 목록을 조회한다")
     void getCategories() throws Exception {
-        mockMvc.perform(get("/api/categories"))
+        mockMvc.perform(get("/api/v1/categories"))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$").isArray())
-            .andExpect(jsonPath("$.length()").value(3));
+            .andExpect(jsonPath("$.data").isArray())
+            .andExpect(jsonPath("$.data.length()").value(3));
     }
 
     @Test
@@ -42,12 +43,12 @@ class CategoryAcceptanceTest {
     void createCategory() throws Exception {
         var request = new CategoryRequest("도서", "#8B4513", "https://example.com/images/book.jpg", "소설, 에세이, 전문서적");
 
-        mockMvc.perform(post("/api/categories")
+        mockMvc.perform(post("/api/v1/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isCreated())
-            .andExpect(jsonPath("$.name").value("도서"))
-            .andExpect(jsonPath("$.color").value("#8B4513"));
+            .andExpect(jsonPath("$.data.name").value("도서"))
+            .andExpect(jsonPath("$.data.color").value("#8B4513"));
     }
 
     @Test
@@ -55,11 +56,11 @@ class CategoryAcceptanceTest {
     void updateCategory() throws Exception {
         var request = new CategoryRequest("가전제품", "#0000FF", "https://example.com/images/appliance.jpg", "가전제품 카테고리");
 
-        mockMvc.perform(put("/api/categories/{id}", 1L)
+        mockMvc.perform(put("/api/v1/categories/{id}", 1L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isOk())
-            .andExpect(jsonPath("$.name").value("가전제품"));
+            .andExpect(jsonPath("$.data.name").value("가전제품"));
     }
 
     @Test
@@ -67,7 +68,7 @@ class CategoryAcceptanceTest {
     void updateCategory_NotFound() throws Exception {
         var request = new CategoryRequest("없는카테고리", "#000000", "https://example.com/images/none.jpg", "설명");
 
-        mockMvc.perform(put("/api/categories/{id}", 999L)
+        mockMvc.perform(put("/api/v1/categories/{id}", 999L)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isNotFound())
@@ -80,15 +81,16 @@ class CategoryAcceptanceTest {
         // 시드 데이터의 카테고리는 product FK 제약이 있으므로 새로 생성 후 삭제
         var request = new CategoryRequest("임시", "#999999", "https://example.com/images/temp.jpg", "삭제 테스트용");
 
-        String response = mockMvc.perform(post("/api/categories")
+        String response = mockMvc.perform(post("/api/v1/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andReturn().getResponse().getContentAsString();
 
-        Long createdId = objectMapper.readTree(response).get("id").asLong();
+        Long createdId = objectMapper.readTree(response).get("data").get("id").asLong();
 
-        mockMvc.perform(delete("/api/categories/{id}", createdId))
-            .andExpect(status().isNoContent());
+        mockMvc.perform(delete("/api/v1/categories/{id}", createdId))
+            .andExpect(status().isOk())
+            .andExpect(jsonPath("$.code").value("NO_CONTENT"));
     }
 
     @Test
@@ -96,7 +98,7 @@ class CategoryAcceptanceTest {
     void createCategory_InvalidRequest() throws Exception {
         var request = new CategoryRequest("", "#000000", "https://example.com/images/none.jpg", "설명");
 
-        mockMvc.perform(post("/api/categories")
+        mockMvc.perform(post("/api/v1/categories")
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(objectMapper.writeValueAsString(request)))
             .andExpect(status().isBadRequest())
