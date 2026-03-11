@@ -4,6 +4,7 @@ import gift.category.Category;
 import gift.category.CategoryErrorCode;
 import gift.category.CategoryException;
 import gift.category.CategoryRepository;
+import gift.category.service.CategoryService;
 import gift.global.common.NameValidator;
 import gift.global.error.CommonErrorCode;
 import gift.global.error.CommonException;
@@ -24,7 +25,7 @@ import org.springframework.transaction.annotation.Transactional;
 @Service
 public class ProductService {
     private final ProductRepository productRepository;
-    private final CategoryRepository categoryRepository;
+    private final CategoryService categoryService;
 
     @Transactional(readOnly = true)
     public Page<ProductResponse> findAll(Pageable pageable) {
@@ -52,7 +53,7 @@ public class ProductService {
     @Transactional
     public ProductResponse save(ProductRequest request) {
         validateName(request.name());
-        Category category = findCategory(request.categoryId());
+        Category category = categoryService.findById(request.categoryId());
         return ProductResponse.from(productRepository.save(
             new Product(request.name(), request.price(), request.imageUrl(), category)));
     }
@@ -60,7 +61,7 @@ public class ProductService {
     @Transactional
     public ProductResponse update(Long id, ProductRequest request) {
         validateName(request.name());
-        Category category = findCategory(request.categoryId());
+        Category category = categoryService.findById(request.categoryId());
         Product product = findById(id);
         product.update(request.name(), request.price(), request.imageUrl(), category);
         return ProductResponse.from(product);
@@ -72,7 +73,7 @@ public class ProductService {
         if (!errors.isEmpty()) {
             return errors;
         }
-        Category category = findCategory(request.categoryId());
+        Category category = categoryService.findById(request.categoryId());
         productRepository.save(new Product(request.name(), request.price(), request.imageUrl(), category));
         return List.of();
     }
@@ -83,7 +84,7 @@ public class ProductService {
         if (!errors.isEmpty()) {
             return errors;
         }
-        Category category = findCategory(request.categoryId());
+        Category category = categoryService.findById(request.categoryId());
         Product product = findById(id);
         product.update(request.name(), request.price(), request.imageUrl(), category);
         return List.of();
@@ -94,11 +95,6 @@ public class ProductService {
         if (!errors.isEmpty()) {
             throw new CommonException(CommonErrorCode.INVALID_REQUEST);
         }
-    }
-
-    private Category findCategory(Long categoryId) {
-        return categoryRepository.findById(categoryId)
-            .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
     }
 
     @Transactional
