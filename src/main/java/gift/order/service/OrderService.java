@@ -11,11 +11,13 @@ import gift.order.api.OrderResponse;
 import gift.product.Product;
 import gift.wish.service.WishService;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+@Slf4j
 @RequiredArgsConstructor
 @Service
 public class OrderService {
@@ -56,8 +58,9 @@ public class OrderService {
         try {
             Product product = option.getProduct();
             messageClient.sendToMe(member.getKakaoAccessToken(), order, product);
-        } catch (Exception ignored) {
-            // best-effort: 메시지 전송 실패는 무시
+        } catch (Exception e) {
+            log.warn("카카오 메시지 전송 실패 (memberId={}, orderId={}): {}",
+                member.getId(), order.getId(), e.getMessage());
         }
     }
 }
