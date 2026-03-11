@@ -18,6 +18,12 @@ public class CategoryService {
     private final CategoryRepository categoryRepository;
 
     @Transactional(readOnly = true)
+    public Category findById(Long id) {
+        return categoryRepository.findById(id)
+                .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
+    }
+
+    @Transactional(readOnly = true)
     public List<Category> findAll() {
         return categoryRepository.findAll();
     }
@@ -31,13 +37,13 @@ public class CategoryService {
 
     @Transactional
     public CategoryResponse save(CategoryRequest request) {
-        return CategoryResponse.from(categoryRepository.save(request.toEntity()));
+        Category category = Category.create(request.name(), request.color(), request.imageUrl(), request.description());
+        return CategoryResponse.from(categoryRepository.save(category));
     }
 
     @Transactional
     public CategoryResponse update(Long id, CategoryRequest request) {
-        Category category = categoryRepository.findById(id)
-            .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
+        Category category = findById(id);
         category.update(request.name(), request.color(), request.imageUrl(), request.description());
         return CategoryResponse.from(category);
     }
