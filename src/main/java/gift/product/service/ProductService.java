@@ -49,33 +49,56 @@ public class ProductService {
 
     private static final int PRODUCT_NAME_MAX_LENGTH = 15;
 
-    public void validateProductName(String name) {
-        List<String> errors = NameValidator.validate(name, PRODUCT_NAME_MAX_LENGTH);
-        if (!errors.isEmpty()) {
-            throw new CommonException(CommonErrorCode.INVALID_REQUEST);
-        }
-    }
-
-    public List<String> validateProductName(String name, boolean allowKakao) {
-        return NameValidator.validate(name, PRODUCT_NAME_MAX_LENGTH, allowKakao);
-    }
-
     @Transactional
     public ProductResponse save(ProductRequest request) {
-        Category category = categoryRepository.findById(request.categoryId())
-            .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
+        validateName(request.name());
+        Category category = findCategory(request.categoryId());
         return ProductResponse.from(productRepository.save(
             new Product(request.name(), request.price(), request.imageUrl(), category)));
     }
 
     @Transactional
     public ProductResponse update(Long id, ProductRequest request) {
-        Category category = categoryRepository.findById(request.categoryId())
-            .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
-        Product product = productRepository.findById(id)
-            .orElseThrow(() -> new ProductException(ProductErrorCode.PRODUCT_NOT_FOUND));
+        validateName(request.name());
+        Category category = findCategory(request.categoryId());
+        Product product = findById(id);
         product.update(request.name(), request.price(), request.imageUrl(), category);
         return ProductResponse.from(product);
+    }
+
+    @Transactional
+    public List<String> adminSave(ProductRequest request) {
+        List<String> errors = NameValidator.validate(request.name(), PRODUCT_NAME_MAX_LENGTH, true);
+        if (!errors.isEmpty()) {
+            return errors;
+        }
+        Category category = findCategory(request.categoryId());
+        productRepository.save(new Product(request.name(), request.price(), request.imageUrl(), category));
+        return List.of();
+    }
+
+    @Transactional
+    public List<String> adminUpdate(Long id, ProductRequest request) {
+        List<String> errors = NameValidator.validate(request.name(), PRODUCT_NAME_MAX_LENGTH, true);
+        if (!errors.isEmpty()) {
+            return errors;
+        }
+        Category category = findCategory(request.categoryId());
+        Product product = findById(id);
+        product.update(request.name(), request.price(), request.imageUrl(), category);
+        return List.of();
+    }
+
+    private void validateName(String name) {
+        List<String> errors = NameValidator.validate(name, PRODUCT_NAME_MAX_LENGTH);
+        if (!errors.isEmpty()) {
+            throw new CommonException(CommonErrorCode.INVALID_REQUEST);
+        }
+    }
+
+    private Category findCategory(Long categoryId) {
+        return categoryRepository.findById(categoryId)
+            .orElseThrow(() -> new CategoryException(CategoryErrorCode.CATEGORY_NOT_FOUND));
     }
 
     @Transactional

@@ -46,13 +46,12 @@ public class AdminProductController {
 
     @PostMapping
     public String create(ProductRequest request, Model model) {
-        List<String> errors = productService.validateProductName(request.name(), true);
+        List<String> errors = productService.adminSave(request);
         if (!errors.isEmpty()) {
             model.addAttribute(ATTR_ERRORS, errors);
             model.addAttribute(ATTR_CATEGORIES, categoryService.findAll());
             return VIEW_NEW;
         }
-        productService.save(request);
         return REDIRECT_LIST;
     }
 
@@ -66,14 +65,13 @@ public class AdminProductController {
 
     @PostMapping("/{id}/edit")
     public String update(@PathVariable Long id, ProductRequest request, Model model) {
-        List<String> errors = productService.validateProductName(request.name(), true);
+        List<String> errors = productService.adminUpdate(id, request);
         if (!errors.isEmpty()) {
             model.addAttribute(ATTR_ERRORS, errors);
             model.addAttribute(ATTR_PRODUCT, productService.findById(id));
             model.addAttribute(ATTR_CATEGORIES, categoryService.findAll());
             return VIEW_EDIT;
         }
-        productService.update(id, request);
         return REDIRECT_LIST;
     }
 

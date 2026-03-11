@@ -42,7 +42,6 @@ public class ProductController {
     public ResponseEntity<ApiResponse<ProductResponse>> createProduct(
         @Valid @RequestBody ProductRequest request
     ) {
-        productService.validateProductName(request.name());
         ProductResponse response = productService.save(request);
         URI location = ServletUriComponentsBuilder.fromCurrentRequest()
             .path("/{id}")
@@ -57,7 +56,6 @@ public class ProductController {
         @PathVariable Long id,
         @Valid @RequestBody ProductRequest request
     ) {
-        productService.validateProductName(request.name());
         ProductResponse response = productService.update(id, request);
         return ResponseEntity.ok(ApiResponse.ok(response));
     }
