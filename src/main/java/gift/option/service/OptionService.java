@@ -45,13 +45,15 @@ public class OptionService {
     @Transactional
     public OptionResponse createOption(Long productId, OptionRequest request) {
         validateName(request.name());
+        validateDuplicateName(productId, request.name());
         Product product = productService.findById(productId);
+        return OptionResponse.from(optionRepository.save(Option.create(product, request.name(), request.quantity())));
+    }
 
-        if (optionRepository.existsByProductIdAndName(productId, request.name())) {
+    private void validateDuplicateName(Long productId, String name) {
+        if (optionRepository.existsByProductIdAndName(productId, name)) {
             throw new OptionException(OptionErrorCode.DUPLICATE_OPTION_NAME);
         }
-
-        return OptionResponse.from(optionRepository.save(new Option(product, request.name(), request.quantity())));
     }
 
     private static final int OPTION_NAME_MAX_LENGTH = 50;
