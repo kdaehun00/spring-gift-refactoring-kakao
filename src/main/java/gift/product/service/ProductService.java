@@ -4,6 +4,7 @@ import gift.category.Category;
 import gift.category.CategoryErrorCode;
 import gift.category.CategoryException;
 import gift.category.CategoryRepository;
+import gift.global.common.NameValidator;
 import gift.global.error.CommonErrorCode;
 import gift.global.error.CommonException;
 import gift.product.Product;
@@ -46,15 +47,17 @@ public class ProductService {
         return ProductResponse.from(findById(id));
     }
 
+    private static final int PRODUCT_NAME_MAX_LENGTH = 15;
+
     public void validateProductName(String name) {
-        List<String> errors = ProductNameValidator.validate(name);
+        List<String> errors = NameValidator.validate(name, PRODUCT_NAME_MAX_LENGTH);
         if (!errors.isEmpty()) {
             throw new CommonException(CommonErrorCode.INVALID_REQUEST);
         }
     }
 
     public List<String> validateProductName(String name, boolean allowKakao) {
-        return ProductNameValidator.validate(name, allowKakao);
+        return NameValidator.validate(name, PRODUCT_NAME_MAX_LENGTH, allowKakao);
     }
 
     @Transactional

@@ -1,5 +1,6 @@
 package gift.option.service;
 
+import gift.global.common.NameValidator;
 import gift.global.error.CommonErrorCode;
 import gift.global.error.CommonException;
 import gift.option.Option;
@@ -54,8 +55,10 @@ public class OptionService {
         return OptionResponse.from(optionRepository.save(new Option(product, request.name(), request.quantity())));
     }
 
+    private static final int OPTION_NAME_MAX_LENGTH = 50;
+
     private void validateName(String name) {
-        List<String> errors = OptionNameValidator.validate(name);
+        List<String> errors = NameValidator.validate(name, OPTION_NAME_MAX_LENGTH);
         if (!errors.isEmpty()) {
             throw new CommonException(CommonErrorCode.INVALID_REQUEST);
         }
